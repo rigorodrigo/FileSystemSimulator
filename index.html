@@ -77,7 +77,7 @@
         <!-- End Estatísticas -->
 
         <!-- Bloco principal -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="grid md:grid-cols-2 gap-4">
             <!-- Bloco de disco -->
             <div class="flex flex-col gap-2">
                 <!-- Header do disco -->
@@ -100,7 +100,7 @@
 
                 <!-- Visualização do disco (blocos) -->
                 <div class="card base-100 shadow-sm p-2">
-                    <div id="disk-blocks" class="grid grid-cols-32 gap-1">
+                    <div id="disk-blocks" class="flex flex-wrap gap-1">
                         <!-- Gerado automaticamente pelo script no final do arquivo -->
                     </div>
                 </div>
@@ -111,8 +111,58 @@
             <!-- Bloco de arquivos e método de gerencimento -->
             <div>
                 <!-- Bloco de arquivos -->
-                <div>
-                
+                <div class="card base-100 shadow-sm p-2">
+                    <!-- Header com path e opções -->
+                    <div class="flex justify-between items-center">
+                        <span>Arquivos</span>
+
+                        <div>
+                            /home/user/Documents
+                        </div>
+
+                        <div>
+                            <button class="btn btn-soft btn-primary">
+                                +
+                            </button>
+                        </div>
+                    </div>
+                    <!-- End Header com path e opções -->
+
+                    <!-- Listagem com barra lateral -->
+                    <div class="h-96"> 
+                        <!-- Barra Lateral -->
+                        <div class="h-full">
+                            <ul class="menu bg-base-200 w-fit h-full">
+                                <li>
+                                    <details open>
+                                    <summary>home</summary>
+                                    <ul>
+                                        <li>
+                                        <details open>
+                                            <summary>user</summary>
+                                            <ul>
+                                            <li><a>Documents</a></li>
+                                            <li><a>Downloads</a></li>
+                                            </ul>
+                                        </details>
+                                        </li>
+                                        <li><a>user2</a></li>
+                                        <li><a>user3</a></li>
+                                    </ul>
+                                    </details>
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- End Barra Lateral -->
+
+
+                        <!-- Listagem de arquivos -->
+                        <div>
+
+                        </div>
+                        <!-- End Listagem de arquivos -->
+                    </div>
+                    <!-- End Listagem com barra lateral -->
                 </div>
                 <!-- End Bloco de arquivos -->
 
