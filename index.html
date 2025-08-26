@@ -4,10 +4,186 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulador do Sistema de Arquivos</title>
-    <link rel="stylesheet" href="./style/index.css">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
+<body class="mx-auto p-4">
+    <div class="flex flex-col space-y-4">
+        <!-- Header -->
+        <div class="flex justify-end mb-4">
+            <button class="btn btn-info btn-soft">
+                Ajuda
+            </button>
+        </div>
+        <!-- End Header -->
+
+        <!-- Estatísticas -->
+        <div class="flex flex-wrap justify-around gap-2">
+            <div class="stats shadow">
+                <div class="stat text-center">
+                    <div class="stat-title">Blocos</div>
+                    <div class="stat-value">1024</div>
+                    <progress class="progress w-48" value="33" max="100"></progress>
+                    <div class="stat-desc">33% usado</div>
+                </div>
+            </div>
+
+            <div class="stats shadow">
+                <div class="stat text-center">
+                    <div class="stat-title">Disco</div>
+                    <div class="stat-value">8 MiB</div>
+                    <progress class="progress w-48" value="33" max="100"></progress>
+                    <div class="stat-desc">33% usado</div>
+                </div>
+            </div>
+
+            <div class="stats shadow">
+                <div class="stat text-center">
+                    <div class="stat-title">Arquivos</div>
+                    <div class="stat-value">64</div>
+                    <div class="stat-desc">6 links</div>
+                </div>
+            </div>
+
+            <div class="stats shadow">
+                <div class="stat text-center">
+                    <div class="stat-title">Diretórios</div>
+                    <div class="stat-value">64</div>
+                </div>
+            </div>
+
+            <div class="stats shadow">
+                <div class="stat text-center">
+                    <div class="stat-title">Método de alocação</div>
+                    <div class="stat-value">Contígua</div>
+                </div>
+            </div>
+
+            <div class="stats shadow">
+                <div class="stat text-center">
+                    <div class="stat-title">Método de diretórios</div>
+                    <div class="stat-value">Linear</div>
+                </div>
+            </div>
+
+            <div class="stats shadow">
+                <div class="stat text-center">
+                    <div class="stat-title">Método de gerenciamento de espaço</div>
+                    <div class="stat-value">Bitmap</div>
+                </div>
+            </div>
+
+        </div>
+        <!-- End Estatísticas -->
+
+        <!-- Bloco principal -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- Bloco de disco -->
+            <div class="flex flex-col gap-2">
+                <!-- Header do disco -->
+                <div class="flex flex-wrap gap-2">
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 bg-success inline-block rounded-md"></span>
+                        <span class="text-sm">Livre</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 bg-info inline-block rounded-md"></span>
+                        <span class="text-sm">Usado</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 bg-warning inline-block rounded-md"></span>
+                        <span class="text-sm">Diretório</span>
+                    </div>
+                </div>
+                <!-- End Header do disco -->
+
+
+                <!-- Visualização do disco (blocos) -->
+                <div class="card base-100 shadow-sm p-2">
+                    <div id="disk-blocks" class="grid grid-cols-32 gap-1">
+                        <!-- Gerado automaticamente pelo script no final do arquivo -->
+                    </div>
+                </div>
+                <!-- End Visualização do disco (blocos) -->
+            </div>
+            <!-- End Bloco de disco -->
+
+            <!-- Bloco de arquivos e método de gerencimento -->
+            <div>
+                <!-- Bloco de arquivos -->
+                <div>
+                
+                </div>
+                <!-- End Bloco de arquivos -->
+
+                <!-- Bloco de método de gerencimento -->
+                <div>
+                
+                </div>
+                <!-- End Bloco de método de gerencimento -->
+            </div>
+            <!-- End Bloco de arquivos e método de gerencimento -->
+        
+        </div>
+        <!-- End Bloco principal -->
+    </div>
     
-    <script src="./js/index.js"></script>
+    <script>
+        // SCRIPT PURAMENTE PARA A VISUALIZAÇÃO DOS BLOCOS DO DISCO
+        // ELE É PARA SER REMOVIDO MAIS TARDE
+        function createBlocks(totalBlocks) {
+            const container = document.getElementById('disk-blocks');
+            
+            for (let i = 0; i < totalBlocks; i++) {
+                const tooltipWrapper = document.createElement('div');
+                tooltipWrapper.className = 'tooltip';
+                
+                const tooltipContent = document.createElement('div');
+                tooltipContent.className = 'tooltip-content';
+                tooltipContent.innerHTML = `
+                    <div class="text-center">
+                        <div class="font-bold text-green-400">Bloco ${i}</div>
+                        <div class="text-xs text-gray-300">Status: Livre</div>
+                        <div class="text-xs text-gray-300">Tamanho: 8KB</div>
+                    </div>
+                `;
+                
+                const block = document.createElement('span');
+                block.className = 'w-4 h-4 bg-success inline-block rounded-sm border border-gray-200 cursor-pointer';
+                block.dataset.blockId = i;
+                block.dataset.status = 'free';
+                
+                // Função temporária para ver como fica dependendo do uso dos blocos
+                block.addEventListener('click', function() {
+                    const statusDiv = tooltipContent.querySelector('.text-gray-300');
+                    
+                    if (this.classList.contains('bg-success')) {
+                        this.classList.replace('bg-success', 'bg-info');
+                        this.dataset.status = 'used';
+                        statusDiv.textContent = 'Status: Usado';
+                        tooltipContent.querySelector('.text-green-400').className = 'font-bold text-blue-400';
+                    } else if (this.classList.contains('bg-info')) {
+                        this.classList.replace('bg-info', 'bg-warning');
+                        this.dataset.status = 'directory';
+                        statusDiv.textContent = 'Status: Diretório';
+                        tooltipContent.querySelector('.text-blue-400').className = 'font-bold text-yellow-400';
+                    } else {
+                        this.classList.replace('bg-warning', 'bg-success');
+                        this.dataset.status = 'free';
+                        statusDiv.textContent = 'Status: Livre';
+                        tooltipContent.querySelector('.text-yellow-400').className = 'font-bold text-green-400';
+                    }
+                });
+                
+                tooltipWrapper.appendChild(tooltipContent);
+                tooltipWrapper.appendChild(block);
+                container.appendChild(tooltipWrapper);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            createBlocks(1024);
+        });
+    </script>
 </body>
 </html>
