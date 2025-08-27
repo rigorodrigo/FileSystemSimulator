@@ -21,7 +21,13 @@
         <div class="flex flex-wrap justify-around gap-2">
             <div class="stats shadow">
                 <div class="stat text-center">
-                    <div class="stat-title">Blocos</div>
+                    <div class="flex justify-between items-center w-full space-x-4">
+                        <div class="flex-1"></div>
+                        <div class="stat-title flex-1">Blocos</div>
+                        <button class="stat-title cursor-pointer w-6 h-6 flex justify-end flex-1" onclick="info_blocks.showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        </button>
+                    </div>
                     <div class="stat-value">1024</div>
                     <progress class="progress w-48" value="33" max="100"></progress>
                     <div class="stat-desc">33% usado</div>
@@ -30,7 +36,13 @@
 
             <div class="stats shadow">
                 <div class="stat text-center">
-                    <div class="stat-title">Disco</div>
+                    <div class="flex justify-between items-center w-full space-x-4">
+                        <div class="flex-1"></div>
+                        <div class="stat-title flex-1">Disco</div>
+                        <button class="stat-title cursor-pointer w-6 h-6 flex justify-end flex-1" onclick="info_disk.showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        </button>
+                    </div>
                     <div class="stat-value">8 MiB</div>
                     <progress class="progress w-48" value="33" max="100"></progress>
                     <div class="stat-desc">33% usado</div>
@@ -39,7 +51,13 @@
 
             <div class="stats shadow">
                 <div class="stat text-center">
-                    <div class="stat-title">Arquivos</div>
+                    <div class="flex justify-between items-center w-full space-x-4">
+                        <div class="flex-1"></div>
+                        <div class="stat-title flex-1">Arquivos</div>
+                        <button class="stat-title cursor-pointer w-6 h-6 flex justify-end flex-1" onclick="info_files.showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        </button>
+                    </div>
                     <div class="stat-value">64</div>
                     <div class="stat-desc">6 links</div>
                 </div>
@@ -47,28 +65,52 @@
 
             <div class="stats shadow">
                 <div class="stat text-center">
-                    <div class="stat-title">Diretórios</div>
+                    <div class="flex justify-between items-center w-full space-x-4">
+                        <div class="flex-1"></div>
+                        <div class="stat-title flex-1">Diretórios</div>
+                        <button class="stat-title cursor-pointer w-6 h-6 flex justify-end flex-1" onclick="info_directories.showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        </button>
+                    </div>
                     <div class="stat-value">64</div>
                 </div>
             </div>
 
             <div class="stats shadow">
                 <div class="stat text-center">
-                    <div class="stat-title">Método de alocação</div>
+                    <div class="flex justify-between items-center w-full space-x-4">
+                        <div class="flex-1"></div>
+                        <div class="stat-title flex-1">Método de alocação</div>
+                        <button class="stat-title cursor-pointer w-6 h-6 flex justify-end flex-1" onclick="info_method_allocation.showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        </button>
+                    </div>
                     <div class="stat-value">Contígua</div>
                 </div>
             </div>
 
             <div class="stats shadow">
                 <div class="stat text-center">
-                    <div class="stat-title">Método de diretórios</div>
+                    <div class="flex justify-between items-center w-full space-x-4">
+                        <div class="flex-1"></div>
+                        <div class="stat-title flex-1">Método de diretórios</div>
+                        <button class="stat-title cursor-pointer w-6 h-6 flex justify-end flex-1" onclick="info_method_directories.showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        </button>
+                    </div>
                     <div class="stat-value">Linear</div>
                 </div>
             </div>
 
             <div class="stats shadow">
                 <div class="stat text-center">
-                    <div class="stat-title">Método de gerenciamento de espaço</div>
+                    <div class="flex justify-between items-center w-full space-x-4">
+                        <div class="flex-1"></div>
+                        <div class="stat-title flex-1">Gerenciamento de espaço</div>
+                        <button class="stat-title cursor-pointer w-6 h-6 flex justify-end flex-1" onclick="info_method_space.showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        </button>
+                    </div>
                     <div class="stat-value">Bitmap</div>
                 </div>
             </div>
@@ -121,9 +163,13 @@
                         </div>
 
                         <div>
-                            <button class="btn btn-soft btn-primary">
-                                +
-                            </button>
+                            <details class="dropdown dropdown-left">
+                            <summary class="btn btn-soft btn-primary text-center align-middle text-bold text-lg md:text-2xl">+</summary>
+                            <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                                <li><a>Criar Arquivo</a></li>
+                                <li><a>Criar Diretório</a></li>
+                            </ul>
+                            </details>
                         </div>
                     </div>
                     <!-- End Header com path e opções -->
@@ -235,5 +281,106 @@
             createBlocks(1024);
         });
     </script>
+
+    <!-- ===================== -->
+    <!--     MODALS ABAIXO     -->
+    <!-- ===================== -->
+
+
+    <!-- Modals para informações -->
+
+    <dialog id="info_blocks" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="text-lg font-bold">Hello!</h3>
+            <p class="py-4">Press ESC key or click outside to close</p>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <dialog id="info_disk" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="text-lg font-bold">Hello!</h3>
+            <p class="py-4">Press ESC key or click outside to close</p>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+    
+    <dialog id="info_files" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="text-lg font-bold">Hello!</h3>
+            <p class="py-4">Press ESC key or click outside to close</p>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+    
+    <dialog id="info_directories" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="text-lg font-bold">Hello!</h3>
+            <p class="py-4">Press ESC key or click outside to close</p>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+    
+    <dialog id="info_method_allocation" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="text-lg font-bold">Hello!</h3>
+            <p class="py-4">Press ESC key or click outside to close</p>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+    
+    <dialog id="info_method_directories" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="text-lg font-bold">Hello!</h3>
+            <p class="py-4">Press ESC key or click outside to close</p>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+    
+    <dialog id="info_method_space" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="text-lg font-bold">Hello!</h3>
+            <p class="py-4">Press ESC key or click outside to close</p>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <!-- End Modals para informações -->
+
 </body>
 </html>
