@@ -153,32 +153,13 @@
             <!-- Bloco de arquivos e método de gerencimento -->
             <div>
                 <!-- Bloco de arquivos -->
-                <div class="card base-100 shadow-sm p-2">
-                    <!-- Header com path e opções -->
-                    <div class="flex justify-between items-center">
-                        <span>Arquivos</span>
-
-                        <div>
-                            /home/user/Documents
-                        </div>
-
-                        <div>
-                            <details class="dropdown dropdown-left">
-                            <summary class="btn btn-soft btn-primary text-center align-middle text-bold text-lg md:text-2xl">+</summary>
-                            <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                                <li><a>Criar Arquivo</a></li>
-                                <li><a>Criar Diretório</a></li>
-                            </ul>
-                            </details>
-                        </div>
-                    </div>
-                    <!-- End Header com path e opções -->
-
-                    <!-- Listagem com barra lateral -->
-                    <div class="h-96"> 
+                <div class="card base-100 shadow-sm">
+                    <!-- Layout principal com sidebar -->
+                    <div class="flex h-auto gap-2">
                         <!-- Barra Lateral -->
-                        <div class="h-full">
-                            <ul class="menu bg-base-200 w-fit h-full">
+                        <div class="min-w-48 bg-base-200 rounded-lg p-2">
+                            <div class="font-semibold mb-2 text-center">Arquivos</div>
+                            <ul class="menu w-full">
                                 <li>
                                     <details open>
                                     <summary>home</summary>
@@ -201,14 +182,37 @@
                         </div>
                         <!-- End Barra Lateral -->
 
+                        <!-- Área principal (path + conteúdo) -->
+                        <div class="flex-1 flex flex-col gap-2 p-2 pl-0">
+                            <!-- Header com path e opções -->
+                            <div class="flex justify-between items-center">
+                                <div class="flex-1 bg-base-300 p-2 rounded-lg mr-2">
+                                    /home/user/Documents
+                                </div>
 
-                        <!-- Listagem de arquivos -->
-                        <div>
+                                <div>
+                                    <details class="dropdown dropdown-left">
+                                    <summary class="btn btn-soft btn-primary text-center align-middle text-bold text-lg md:text-2xl">+</summary>
+                                    <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                                        <li><a>Criar Arquivo</a></li>
+                                        <li><a>Criar Diretório</a></li>
+                                    </ul>
+                                    </details>
+                                </div>
+                            </div>
+                            <!-- End Header com path e opções -->
 
+                            <!-- Listagem de arquivos -->
+                            <div class="flex-1 bg-base-100 rounded-lg p-2 min-h-96 border border-base-300 border-2">
+                                <div class="text-center text-gray-500">
+                                    Conteúdo dos arquivos aqui
+                                </div>
+                            </div>
+                            <!-- End Listagem de arquivos -->
                         </div>
-                        <!-- End Listagem de arquivos -->
+                        <!-- End Área principal -->
                     </div>
-                    <!-- End Listagem com barra lateral -->
+                    <!-- End Layout principal com sidebar -->
                 </div>
                 <!-- End Bloco de arquivos -->
 
