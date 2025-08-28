@@ -595,8 +595,29 @@
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
-            <h3 class="text-lg font-bold">Hello!</h3>
-            <p class="py-4">Press ESC key or click outside to close</p>
+            <h3 class="text-lg font-bold">Editar configuração dos blocos do disco</h3>
+            <p class="py-4 text-error">Isso irá deletar todo o disco e todas as partições.</p>
+            <form action="">
+                <label class="input w-full">
+                    Quantidade de blocos:
+                    <input type="number" class="grow w-full" />
+                </label>
+
+                <label class="input w-full mt-2">
+                    Tamanho de cada bloco:
+                    <input type="number" class="grow w-full" />
+                </label>
+                <div class="flex justify-between mt-4">
+                    <form method="dialog">
+                        <button class="btn btn-soft btn-ghost">
+                            Cancelar
+                        </button>
+                    </form>
+                    <button class="btn btn-soft btn-error">
+                        Editar blocos
+                    </button>
+                </div>
+            </form>
         </div>
         <form method="dialog" class="modal-backdrop">
             <button>close</button>
