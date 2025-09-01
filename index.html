@@ -490,6 +490,7 @@
             <p class="py-4">Os blocos são unidades de alocação de espaço em disco. Cada bloco tem um tamanho fixo e é usado para armazenar dados de arquivos e diretórios.</p>
 
             <p>O seu disco atualmente está dividido em 1024 blocos com um tamanho de 4 KiB cada.</p>
+            <p>Na vida real cada partição e cada algortimo de aloção tem o próprio tamanho de bloco, que também pode ser alterado a qualquer momento. Entretanto, para manter a simplicidade, o tamanho de bloco e quantidade de blocos é global para todas as partições.</p>
 
             <div class="flex justify-between mt-4">
                 <form method="dialog">
@@ -514,8 +515,9 @@
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
-            <h3 class="text-lg font-bold">Hello!</h3>
-            <p class="py-4">Press ESC key or click outside to close</p>
+            <h3 class="text-lg font-bold">Informações sobre o disco!</h3>
+            <p class="py-4">O disco é o local físico onde seus arquivos e informações são guardadas.</p>
+            <p>Neste simulador, o tamanho do disco é calculado pelo tamanho dos blocos e a quantidade de blocos, entretanto, na vida real isso não é verdade, os discos vem com um tamanho físico de fábrica, não dependente do tamanho do bloco.</p>
         </div>
         <form method="dialog" class="modal-backdrop">
             <button>close</button>
