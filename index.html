@@ -399,64 +399,6 @@
         </div>
         <!-- End Bloco principal -->
     </div>
-    
-   <!--- <script>
-        // SCRIPT PURAMENTE PARA A VISUALIZAÇÃO DOS BLOCOS DO DISCO
-        // ELE É PARA SER REMOVIDO MAIS TARDE
-        function createBlocks(totalBlocks) {
-            const container = document.getElementById('disk-blocks');
-            
-            for (let i = 0; i < totalBlocks; i++) {
-                const tooltipWrapper = document.createElement('div');
-                tooltipWrapper.className = 'tooltip';
-                
-                const tooltipContent = document.createElement('div');
-                tooltipContent.className = 'tooltip-content';
-                tooltipContent.innerHTML = `
-                    <div class="text-center">
-                        <div class="font-bold text-green-400">Bloco ${i}</div>
-                        <div class="text-xs text-gray-300">Status: Livre</div>
-                        <div class="text-xs text-gray-300">Tamanho: 8KB</div>
-                    </div>
-                `;
-                
-                const block = document.createElement('span');
-                block.className = 'w-4 h-4 bg-success inline-block rounded-sm border border-gray-200 cursor-pointer';
-                block.dataset.blockId = i;
-                block.dataset.status = 'free';
-                
-                // Função temporária para ver como fica dependendo do uso dos blocos
-                block.addEventListener('click', function() {
-                    const statusDiv = tooltipContent.querySelector('.text-gray-300');
-                    
-                    if (this.classList.contains('bg-success')) {
-                        this.classList.replace('bg-success', 'bg-info');
-                        this.dataset.status = 'used';
-                        statusDiv.textContent = 'Status: Usado';
-                        tooltipContent.querySelector('.text-green-400').className = 'font-bold text-blue-400';
-                    } else if (this.classList.contains('bg-info')) {
-                        this.classList.replace('bg-info', 'bg-warning');
-                        this.dataset.status = 'directory';
-                        statusDiv.textContent = 'Status: Diretório';
-                        tooltipContent.querySelector('.text-blue-400').className = 'font-bold text-yellow-400';
-                    } else {
-                        this.classList.replace('bg-warning', 'bg-success');
-                        this.dataset.status = 'free';
-                        statusDiv.textContent = 'Status: Livre';
-                        tooltipContent.querySelector('.text-yellow-400').className = 'font-bold text-green-400';
-                    }
-                });
-                
-                tooltipWrapper.appendChild(tooltipContent);
-                tooltipWrapper.appendChild(block);
-                container.appendChild(tooltipWrapper);
-            }
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            createBlocks(512);
-        });
-    </script> -->
 
     <!-- ===================== -->
     <!--     MODALS ABAIXO     -->
