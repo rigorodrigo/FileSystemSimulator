@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script type="module" src="js/index.js"></script>
     <script type="module" src="js/onboarding.js"></script>
+    <script type="module" src="js/modals/edit_blocks.js"></script>
 </head>
 <body class="p-4">
     <div class="flex flex-col space-y-4 max-w-[96rem] mx-auto">
@@ -575,15 +576,15 @@
             </form>
             <h3 class="text-lg font-bold">Editar configuração dos blocos do disco</h3>
             <p class="py-4 text-error">Isso irá deletar todo o disco e todas as partições.</p>
-            <form action="">
+            <form action="" id="form-edit-blocks">
                 <label class="input w-full">
                     Quantidade de blocos:
-                    <input type="number" class="grow w-full" />
+                    <input type="number" name="edit_blocks_quantity" class="grow w-full" />
                 </label>
 
                 <label class="input w-full mt-2">
                     Tamanho de cada bloco:
-                    <input type="number" class="grow w-full" />
+                    <input type="number" name="edit_blocks_size" class="grow w-full" />
                 </label>
                 <div class="flex justify-between mt-4">
                     <form method="dialog">
