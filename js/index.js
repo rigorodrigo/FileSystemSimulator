@@ -1,5 +1,6 @@
-import  createDisk  from './createDisk.js'
+import createDisk from './createDisk.js';
 
-  document.addEventListener('DOMContentLoaded', () => {
-            createDisk(2048,'4KB')
-        });
+document.addEventListener('DOMContentLoaded', () => {
+    // Show onboarding modal
+    onboarding.showModal();
+});

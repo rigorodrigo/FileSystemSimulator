@@ -13,7 +13,7 @@ export default function createDisk(totalBlocks, blockSize) {
                 <div class="text-center">
                     <div class="font-bold text-green-400">Bloco ${i}</div>
                     <div class="text-xs text-gray-300">Status: Livre</div>
-                    <div class="text-xs text-gray-300">Tamanho: ${blockSize}</div>
+                    <div class="text-xs text-gray-300">Tamanho: ${blockSize}KB</div>
                 </div>
                 `;
                 
@@ -30,6 +30,6 @@ export default function createDisk(totalBlocks, blockSize) {
 
     }
 
-    return {blocks, totalBlocks,blockSize};
+    return {blocks, totalBlocks, blockSize};
 
 }
