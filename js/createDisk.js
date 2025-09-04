@@ -18,7 +18,7 @@ export default function createDisk(totalBlocks, blockSize) {
                 `;
                 
                 const block = document.createElement('span');
-                block.className = 'w-4 h-4 bg-success inline-block rounded-sm border border-gray-200 cursor-pointer';
+                block.className = 'w-4 h-4 bg-neutral-content inline-block rounded-sm border border-gray-200 cursor-pointer';
                 block.dataset.blockId = i;
                 block.dataset.status = 'free';
 
