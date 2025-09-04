@@ -9,6 +9,8 @@
     <script type="module" src="js/index.js"></script>
     <script type="module" src="js/onboarding.js"></script>
     <script type="module" src="js/modals/edit_blocks.js"></script>
+    <script type="module" src="js/modals/create_partition.js"></script>
+    <script type="module" src="js/deletePartition.js"></script>
 </head>
 <body class="p-4">
     <div class="flex flex-col space-y-4 max-w-[96rem] mx-auto">
@@ -198,135 +200,8 @@
                     </div>
 
                     <!-- Lista de Partições -->
-                    <div class="pt-2 space-y-2">
-
-                        <div class="border border-primary bg-primary/10 p-2 rounded-lg space-y-2">
-                            <span class="font-bold mb-2">Partição 1</span>
-
-                            <div class="flex flex-wrap justify-around gap-2 mt-2">
-                                <div class="stats shadow">
-                                    <div class="stat text-center p-2">
-                                        <div class="stat-title flex-1">Blocos</div>
-                                        <div class="stat-value text-xl">
-                                            100 - 199
-                                        </div>
-                                        <div class="stat-desc">100 total</div>
-                                    </div>
-                                </div>
-
-                                <div class="stats shadow">
-                                    <div class="stat text-center p-2">
-                                        <div class="stat-title flex-1">Tamanho</div>
-                                        <div class="stat-value text-xl">
-                                            4 MiB
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="stats shadow">
-                                    <div class="stat text-center p-2">
-                                        <div class="stat-title flex-1">Alocação</div>
-                                        <div class="stat-value text-xl">
-                                            Contígua
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="stats shadow">
-                                    <div class="stat text-center p-2">
-                                        <div class="stat-title flex-1">Diretórios</div>
-                                        <div class="stat-value text-xl">
-                                            Linear
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="stats shadow">
-                                    <div class="stat text-center p-2">
-                                        <div class="stat-title flex-1">Espaço livre</div>
-                                        <div class="stat-value text-xl">
-                                            Bitmap
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <progress class="progress w-full" value="33" max="100"></progress>
-                                <div class="flex justify-between">
-                                    <span>0 / 100 blocos utilizados (0%)</span>
-                                    <button onclick="delete_partition.showModal()">
-                                        <svg class="text-error/30 hover:text-error cursor-pointer transition" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="border border-base-300 p-2 rounded-lg space-y-2">
-                            <div class="flex justify-between">
-                                <span class="font-bold">Partição 2</span>
-
-                            </div>
-
-                            <div class="flex flex-wrap justify-around gap-2">
-                                <div class="stats shadow">
-                                    <div class="stat text-center p-2">
-                                        <div class="stat-title flex-1">Blocos</div>
-                                        <div class="stat-value text-xl">
-                                            100 - 199
-                                        </div>
-                                        <div class="stat-desc">100 total</div>
-                                    </div>
-                                </div>
-
-                                <div class="stats shadow">
-                                    <div class="stat text-center p-2">
-                                        <div class="stat-title flex-1">Tamanho</div>
-                                        <div class="stat-value text-xl">
-                                            4 MiB
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="stats shadow">
-                                    <div class="stat text-center p-2">
-                                        <div class="stat-title flex-1">Alocação</div>
-                                        <div class="stat-value text-xl">
-                                            Contígua
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="stats shadow">
-                                    <div class="stat text-center p-2">
-                                        <div class="stat-title flex-1">Diretórios</div>
-                                        <div class="stat-value text-xl">
-                                            Linear
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="stats shadow">
-                                    <div class="stat text-center p-2">
-                                        <div class="stat-title flex-1">Espaço livre</div>
-                                        <div class="stat-value text-xl">
-                                            Bitmap
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <progress class="progress w-full" value="33" max="100"></progress>
-                                <div class="flex justify-between">
-                                    <span>0 / 100 blocos utilizados (0%)</span>
-                                    <button onclick="delete_partition.showModal()">
-                                        <svg class="text-error/30 hover:text-error cursor-pointer transition" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
+                    <div class="pt-2 space-y-2" id="partitions-list">
+                        <div class="text-center text-gray-500 py-4">Nenhuma partição criada ainda</div>
                     </div>
                     <!-- End Lista de Partições -->
                 </div>
@@ -658,54 +533,57 @@
             
             <h2 class="mt-2 font-bold">Especificações da partição</h2>
             <div>
-                <form action="">
+                <form id="create-partition-form" action="">
                     <label class="input w-full">
                         Nome:
-                        <input type="text" class="grow w-full" placeholder="Minha Partição" />
+                        <input id="partition-name" type="text" class="grow w-full" placeholder="Minha Partição" />
                     </label>
 
                     <div class="grid md:grid-cols-2 gap-2 mt-2">
                         <label class="input w-full">
                             Bloco inicial:
-                            <input type="number" class="grow w-full" />
+                            <input id="partition-start-block" type="number" class="grow w-full" min="0" />
                         </label>
 
                         <label class="input w-full">
                             Bloco final:
-                            <input type="number" class="grow w-full" />
+                            <input id="partition-end-block" type="number" class="grow w-full" min="0" />
                         </label>
                     </div>
                     
                     <label class="select w-full grid grid-cols-2 mt-2">
                         Algorítmo de alocação:
-                        <select required>
-                            <option>Contígua</option>
-                            <option>Encadeada</option>
-                            <option>FAT</option>
-                            <option>Indexada Combinada</option>
+                        <select id="partition-allocation-method" required>
+                            <option value="">Selecione...</option>
+                            <option value="Contígua">Contígua</option>
+                            <option value="Encadeada">Encadeada</option>
+                            <option value="FAT">FAT</option>
+                            <option value="Indexada Combinada">Indexada Combinada</option>
                         </select>
                     </label>
                     
                     <label class="select w-full grid grid-cols-2 mt-2">
                         Método de diretórios:
-                        <select required>
-                            <option>Linear</option>
-                            <option>Dois Níveis</option>
-                            <option>Árvore</option>
-                            <option>Grafo Acíclico</option>
+                        <select id="partition-directory-method" required>
+                            <option value="">Selecione...</option>
+                            <option value="Linear">Linear</option>
+                            <option value="Dois Níveis">Dois Níveis</option>
+                            <option value="Árvore">Árvore</option>
+                            <option value="Grafo Acíclico">Grafo Acíclico</option>
                         </select>
                     </label>
                     
                     <label class="select w-full grid grid-cols-2 mt-2">
                         Gerenciamento de espaço livre:
-                        <select required>
-                            <option>Mapa de bits</option>
-                            <option>Lista de blocos livres</option>
+                        <select id="partition-space-management" required>
+                            <option value="">Selecione...</option>
+                            <option value="Mapa de bits">Mapa de bits</option>
+                            <option value="Lista de blocos livres">Lista de blocos livres</option>
                         </select>
                     </label>
 
                     <div class="flex justify-end mt-4">
-                        <button class="btn btn-soft btn-primary">
+                        <button type="submit" class="btn btn-soft btn-primary">
                             Criar Partição
                         </button>
                     </div>
@@ -802,7 +680,7 @@
                         Cancelar
                     </button>
                 </form>
-                <button class="btn btn-soft btn-error">
+                <button onclick="confirmDeletePartition()" class="btn btn-soft btn-error">
                     Excluir Partição
                 </button>
             </div>

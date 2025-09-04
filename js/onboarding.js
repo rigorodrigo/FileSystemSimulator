@@ -34,7 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
             onboarding.close();
 
             // Initialize disk
-            createDisk(blockQuantity, blockSize);
+            const diskData = createDisk(blockQuantity, blockSize);
+            globalState.setDisk({ blocks: diskData.blocks });
 
             updateStats();
         });
