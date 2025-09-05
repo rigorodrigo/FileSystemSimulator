@@ -107,41 +107,5 @@ function createPartition(name, startBlock, endBlock, allocationMethod, directory
     return partition;
 }
 
-function deletePartition(partitionId) {
-
-    const partitions = globalState.getDisk().partitions || [];
-    const blocks = globalState.getDisk().blocks;
-    const partitionIndex = partitions.findIndex(p => p.id.toString() == partitionId.toString());
-    const partition = partitions[partitionIndex];
-
-    if (partitionIndex === -1) {
-        throw new Error("Partição não existe!");
-    }
-
-    for (let i = partition.startBlock; i < partition.endBlock; i++) {
-        if (blocks[i]) {
-            blocks[i].className = 'w-4 h-4 bg-success inline-block rounded-sm border border-gray-200 cursor-pointer';
-            blocks[i].dataset.status = 'free';
-            delete blocks[i].dataset.partitionId;
-
-            const tooltipContent = blocks[i].parentElement.querySelector('.tooltip-content');
-            if (tooltipContent) {
-                const blockSize = globalState.getDiskConfig().blockSize;
-                tooltipContent.innerHTML = `
-                    <div class="text-center">
-                        <div class="font-bold text-green-400">Bloco ${i}</div>
-                        <div class="text-xs text-gray-300">Status: Livre</div>
-                        <div class="text-xs text-gray-300">Tamanho: ${blockSize}KB</div>
-                    </div>
-                `;
-            }
-        }
-    }
-
-    globalState.setDisk({...disk, partitions });
-    partitions.slice(partitionIndex,1);
-    updateAll();
-}
-
 export default createPartition;
-export { Partition, validatePartition, deletePartition };
+export { Partition, validatePartition};
