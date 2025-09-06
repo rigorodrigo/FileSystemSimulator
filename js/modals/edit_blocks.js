@@ -18,8 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const blockQuantity = parseInt(data.edit_blocks_quantity);
             const blockSize = parseInt(data.edit_blocks_size);
 
-            // Validate inputs
-            // TODO
             if (!blockQuantity || !blockSize) {
                 alert('Por favor, preencha todos os campos');
                 return;
@@ -27,14 +25,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             globalState.reset();
 
-            // Store configuration in global state
             globalState.setDiskConfig(blockQuantity, blockSize);
 
-            // Close modal
             edit_blocks.close();
 
-            // Initialize disk
-            createDisk(blockQuantity, blockSize);
+            const diskData = createDisk(blockQuantity, blockSize);
             globalState.setDisk({ blocks: diskData.blocks });
 
             const bitmap = bitMap();
