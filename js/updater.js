@@ -36,11 +36,14 @@ export function updatePartitionsList() {
     if (partitions.length === 0) {
         partitionsListElem.innerHTML = '<div class="text-center text-gray-500 py-4">Nenhuma partição criada ainda</div>';
     }
+
+    // Dispatch event to notify partition selector of updates
+    document.dispatchEvent(new CustomEvent('partitionsUpdated'));
 }
 
 function createPartitionElement(partition) {
     const div = document.createElement('div');
-    div.className = 'border border-primary bg-primary/10 p-2 rounded-lg space-y-2';
+    div.className = 'border p-2 rounded-lg space-y-2 cursor-pointer hover:bg-primary/15 transition-colors';
     div.dataset.partitionId = partition.id;
     
     const usagePercentage = partition.getUsagePercentage();

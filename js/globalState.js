@@ -13,6 +13,8 @@ class GlobalState {
             partitions: [],
             files: []
         };
+        
+        this.selectedPartition = null;
     }
 
     // Disk configuration methods
@@ -35,6 +37,17 @@ class GlobalState {
         return this.disk;
     }
 
+    // Partition selection methods
+    setSelectedPartition(partitionId) {
+        const partitions = this.disk.partitions || [];
+        const partition = partitions.find(p => p.id == partitionId);
+        this.selectedPartition = partition || null;
+    }
+
+    getSelectedPartition() {
+        return this.selectedPartition;
+    }
+
     // Reset everything
     reset() {
         this.diskConfig = {
@@ -47,6 +60,7 @@ class GlobalState {
             partitions: [],
             files: []
         };
+        this.selectedPartition = null;
     }
 }
 

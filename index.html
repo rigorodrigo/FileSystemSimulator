@@ -10,7 +10,9 @@
     <script type="module" src="js/onboarding.js"></script>
     <script type="module" src="js/modals/edit_blocks.js"></script>
     <script type="module" src="js/modals/create_partition.js"></script>
+    <script type="module" src="js/modals/file_handler.js"></script>
     <script type="module" src="js/deletePartition.js"></script>
+    <script type="module" src="js/partitionSelector.js"></script>
 </head>
 <body class="p-4">
     <div class="flex flex-col space-y-4 max-w-[96rem] mx-auto">
@@ -258,9 +260,9 @@
                             <!-- End Header com path e opções -->
 
                             <!-- Listagem de arquivos -->
-                            <div class="flex-1 bg-base-100 rounded-lg p-2 min-h-96 border border-base-300 border-2">
-                                <div class="text-center text-gray-500">
-                                    Conteúdo dos arquivos aqui
+                            <div id="files-container" class="flex-1 bg-base-100 rounded-lg p-2 min-h-96 border border-base-300 border-2">
+                                <div id="file-browser-items" class="text-center text-gray-500">
+                                    Selecione uma partição para ver seus arquivos
                                 </div>
                             </div>
                             <!-- End Listagem de arquivos -->
@@ -634,29 +636,34 @@
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
             <h3 class="text-lg font-bold">Criar Arquivo</h3>
-
-            <div class="mt-2">
-                <form action="">
-                    <label class="input w-full">
-                        Nome:
-                        <input type="text" class="grow w-full" placeholder="superArquivo" />
-                    </label>
-                    <label class="input w-full mt-2">
-                        Tamanho em bytes:
-                        <input type="number" class="grow w-full" placeholder="8192" />
-                    </label>
-                </form>
+            
+            <div class="bg-info/10 p-3 rounded-lg mb-4" id="selected-partition-info">
+                <div class="text-sm text-gray-600">Partição selecionada:</div>
+                <div class="font-semibold" id="selected-partition-name">Nenhuma partição selecionada</div>
             </div>
 
-            <div class="flex justify-between mt-4">
-                <form method="dialog">
-                    <button class="btn btn-soft btn-ghost">
-                        Cancelar
-                    </button>
+            <div class="mt-2">
+                <form action="" id="create-file-form">
+                    <label class="input w-full">
+                        Nome:
+                        <input type="text" id="file-create-name" class="grow w-full" placeholder="superArquivo" />
+                    </label>
+                    <label class="input w-full mt-2">
+                        Tamanho (em KB):
+                        <input type="number" id="file-create-size" class="grow w-full" placeholder="8192" />
+                    </label>
+                    
+                    <div class="flex justify-between mt-4">
+                        <form method="dialog">
+                            <button class="btn btn-soft btn-ghost">
+                                Cancelar
+                            </button>
+                        </form>
+                        <button type="submit" class="btn btn-soft btn-success">
+                            Criar Arquivo
+                        </button>
+                    </div>
                 </form>
-                <button class="btn btn-soft btn-success">
-                    Criar Arquivo
-                </button>
             </div>
         </div>
         <form method="dialog" class="modal-backdrop">

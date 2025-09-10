@@ -15,7 +15,7 @@ export function allocateContiguous(partition, requiredBlocks) {
             if (count === requiredBlocks) {
                 const allocated = Array.from({ length: requiredBlocks }, (_, index) => firstIndex + index);
                 for (const index of allocated) {
-                    blocks[index].dataset.status = 'used;'
+                    blocks[index].dataset.status = 'used';
                 }
                 return allocated;
             }
@@ -40,7 +40,7 @@ export function allocateLinked(partition, requiredBlocks) {
     for (let i = startBlock; i < endBlock; i++) {
 
         if (blocks[i].dataset.status === 'free') {
-            freeBlocks.push[i];
+            freeBlocks.push(i);
             if (freeBlocks.length === requiredBlocks) break;
         }
     }
@@ -73,7 +73,7 @@ export function allocateIndexed(partition, requiredBlocks) {
     const freeBlocks = [];
 
     for (let i = startBlock; i < endBlock; i++) {
-        if (blocks[i] === 'free') freeBlocks.push[i];
+        if (blocks[i].dataset.status === 'free') freeBlocks.push(i);
     }
 
     if (freeBlocks.length < requiredBlocks + 1) return null;  // +1 pois precisa de um bloco para o índice
@@ -83,7 +83,7 @@ export function allocateIndexed(partition, requiredBlocks) {
 
     blocks[indexBlock].dataset.indexedBlocks = JSON.stringify(fileBlocks);
 
-    block[indexBlock].dataset.status = 'used'
+    blocks[indexBlock].dataset.status = 'used';
     for (const index of fileBlocks) {
         blocks[index].dataset.status = 'used';
     }
