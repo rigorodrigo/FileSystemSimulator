@@ -1,4 +1,5 @@
 import globalState from './globalState.js';
+import updateBrowser from './updater.js';
 
 class PartitionSelector {
     constructor() {
@@ -67,13 +68,7 @@ class PartitionSelector {
             }
         }
 
-        if (fileBrowserItems) {
-            if (selectedPartition) {
-                fileBrowserItems.textContent = 'Partição selecionada: ' + selectedPartition.name + ' - ISSO AINDA PRECISA SER FEITO';
-            } else {
-                fileBrowserItems.textContent = 'Nenhuma partição selecionada';
-            }
-        }
+        updateBrowser();
     }
 
     dispatchSelectionEvent(partitionId) {
