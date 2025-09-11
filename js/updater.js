@@ -10,6 +10,36 @@ export function updateStats() {
     // Update block quantity and disk size from the global stats
     const blockQuantityElem = document.getElementById('stat-global-block-quantity');
     const diskSizeElem = document.getElementById('stat-global-disk-size');
+    const blockUsageProgress = document.getElementById('stat-global-block-usage-progress');
+    const blockUsageText = document.getElementById('stat-global-block-usage');
+    const diskUsageProgress = document.getElementById('stat-global-disk-usage-progress');
+    const diskUsageText = document.getElementById('stat-global-disk-usage');
+
+    const diskConfig = globalState.getDiskConfig();
+    const disk = globalState.getDisk();
+
+    // Calculate used blocks
+    const usedBlocks = disk.partitions.reduce((sum, partition) => sum + partition.usedBlocks, 0);
+    const totalBlocks = diskConfig.blockQuantity || 1; // Avoid division by zero
+
+    const blockUsagePercent = ((usedBlocks / totalBlocks) * 100).toFixed(2);
+    if (blockUsageProgress) {
+        blockUsageProgress.value = blockUsagePercent;
+    }
+    if (blockUsageText) {
+        blockUsageText.textContent = `${blockUsagePercent}% usado`;
+    }
+
+    const usedSpace = disk.files.reduce((sum, file) => sum + file.sizeInKB, 0);
+    const totalSpace = diskConfig.totalCapacity || 1; // Avoid division by zero
+
+    const diskUsagePercent = ((usedSpace / totalSpace) * 100).toFixed(2);
+    if (diskUsageProgress) {
+        diskUsageProgress.value = diskUsagePercent;
+    }
+    if (diskUsageText) {
+        diskUsageText.textContent = `${diskUsagePercent}% usado`;
+    }
 
     if (blockQuantityElem) {
         blockQuantityElem.textContent = globalState.getDiskConfig().blockQuantity || '0';
@@ -132,8 +162,7 @@ function updateBrowser() {
         fileElem.dataset.fileId = file.id;
         fileElem.innerHTML = `
             <div class="flex justify-between">${file.name}</div>
-            <div class="text-sm">Tamanho: ${(file.sizeInKB)} MB</div>
-            <div class="text-sm">Blocos Alocados: ${file.allocatedBlocks.length}</div>
+            <div class="text-sm">Tamanho: ${(file.sizeInKB)} KB (${file.allocatedBlocks.length} blocos)</div>
             <button onclick="deleteFile('${file.id}')" class="text-error hover:underline">Excluir Arquivo</button>
         `;
         fileListElem.appendChild(fileElem);
