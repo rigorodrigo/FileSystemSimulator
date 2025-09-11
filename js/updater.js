@@ -3,9 +3,9 @@ import globalState from './globalState.js';
 export default function updateAll() {
     updateStats();
     updatePartitionsList();
+    updateBrowser();
 }
 
-// Function to update stats in the UI
 export function updateStats() {
     // Update block quantity and disk size from the global stats
     const blockQuantityElem = document.getElementById('stat-global-block-quantity');
@@ -111,4 +111,36 @@ function createPartitionElement(partition) {
     `;
     
     return div;
+}
+
+
+function updateBrowser() {
+    // Get the current select partatition and all the related files
+    const selectedPartition = globalState.getSelectedPartition();
+    if (!selectedPartition) return;
+
+    const files = globalState.getFilesInPartition(selectedPartition.id);
+
+    // Update file list in the UI
+    const fileListElem = document.getElementById('file-browser-items');
+    if (!fileListElem) return;
+    fileListElem.innerHTML = '';
+
+    files.forEach(file => {
+        const fileElem = document.createElement('div');
+        fileElem.className = 'border p-2 rounded-lg space-y-2 cursor-pointer hover:bg-primary/15 transition-colors max-w-fit max-h-fit';
+        fileElem.dataset.fileId = file.id;
+        fileElem.innerHTML = `
+            <div class="flex justify-between">${file.name}</div>
+            <div class="text-sm">Tamanho: ${(file.sizeInKB)} MB</div>
+            <div class="text-sm">Blocos Alocados: ${file.allocatedBlocks.length}</div>
+            <button onclick="deleteFile('${file.id}')" class="text-error hover:underline">Excluir Arquivo</button>
+        `;
+        fileListElem.appendChild(fileElem);
+    });
+
+    if (files.length === 0) {
+        fileListElem.innerHTML = '<div class="text-center text-gray-500 py-4">Nenhum arquivo nesta partição</div>';
+    }
+    
 }

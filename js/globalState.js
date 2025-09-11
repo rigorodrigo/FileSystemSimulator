@@ -37,6 +37,13 @@ class GlobalState {
         return this.disk;
     }
 
+    // Files methos
+
+    // Return all files from a specific partiton
+    getFilesInPartition(partitionId) {
+        return this.disk.files.filter(file => file.partitionId === partitionId);
+    }
+
     // Partition selection methods
     setSelectedPartition(partitionId) {
         const partitions = this.disk.partitions || [];
