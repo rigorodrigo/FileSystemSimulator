@@ -1,7 +1,8 @@
 import globalState from './globalState.js'
+import {linearDirectoryMethod,twoLevelsDirectoryMethod,treeDirectoryMethod} from  './createDirectoryMethod.js'
 
 export class Directory {
-    constructor(name, sizeInKB, partition, children, blockAllocated,directoryMethod) {
+    constructor(name, sizeInKB, partition, children, blockAllocated, directoryMethod) {
         this.name = name;
         this.sizeInKB = sizeInKB;
         this.partition = partition;
@@ -71,13 +72,25 @@ function allocateDirectoryBlocks(directory, partition) {
     return allocationResult;
 }
 
+f/*unction directoryMethodSelector(partition) {
+    switch(partition.directoryMethod) {
+        case 'Linear':
+            return linearDirectoryMethod(partition);
+        case 'Dois Níveis':
+            return twoLevelsDirectoryMethod(partition);
+        case 'Árvore':
+            return treeDirectoryMethod(partition);
+        default:
+            throw new Error(`Método de diretório "${partition.directoryMethod}" não existe!`);
+    }
+}*/
 
 
 export function createDirectory(name, sizeInKB, partition, blockAllocated, directoryMethod) {
     validateDirectoryCreation(name, sizeInKB, partition);
     const newDirectory = new Directory(name, sizeInKB, partition, blockAllocated, directoryMethod);
     allocateDirectoryBlocks(newDirectory, partition);
-    partition.usedBlocks += Math.ceil(sizeInKB / globalState.getDiskConfig().blockSize);
+   partition.usedBlocks +=1;
     globalState.addDirectory(newDirectory);
 
     return newDirectory;

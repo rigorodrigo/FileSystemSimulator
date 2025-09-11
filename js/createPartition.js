@@ -12,6 +12,7 @@ class Partition {
         this.directoryMethod = directoryMethod;
         this.spaceManagementMethod = spaceManagementMethod;
         this.usedBlocks = 0;
+        this.rootDirectory = null;
 
         const blockSize = globalState.getDiskConfig().blockSize;
         this.sizeInBytes = this.totalBlocks * blockSize * 1024;
