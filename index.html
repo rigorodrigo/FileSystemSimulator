@@ -650,15 +650,13 @@
                     </label>
                     <label class="input w-full mt-2">
                         Tamanho (em KB):
-                        <input type="number" id="file-create-size" class="grow w-full" placeholder="8192" />
+                        <input type="number" id="file-create-size" class="grow w-full" placeholder="4" />
                     </label>
                     
                     <div class="flex justify-between mt-4">
-                        <form method="dialog">
-                            <button class="btn btn-soft btn-ghost">
-                                Cancelar
-                            </button>
-                        </form>
+                        <button type="button" onclick="create_file.close()" class="btn btn-soft btn-ghost">
+                            Cancelar
+                        </button>
                         <button type="submit" class="btn btn-soft btn-success">
                             Criar Arquivo
                         </button>

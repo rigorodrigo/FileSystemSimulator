@@ -1,4 +1,5 @@
-import globalState from "../globalState";
+import globalState from "../globalState.js";
+import createFile from "../createFile.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     const createFileForm = document.getElementById('create-file-form');
@@ -6,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (createFileForm) {
         createFileForm.addEventListener('submit', (e) => {
             e.preventDefault();
+            console.log("Starting File Creation...");
 
             const fileNameInput = document.getElementById('file-create-name');
             const fileSizeInput = document.getElementById('file-create-size');
@@ -25,20 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             try {
-                validateFileCreation(fileName, fileSize, selectedPartition);
-
-                const newFile = new File(fileName, fileSize, selectedPartition);
-
-                allocateFileBlocks(newFile, selectedPartition);
-
-                // Update global state
-                const disk = globalState.getDisk();
-                disk.files.push(newFile);
-                selectedPartition.usedBlocks += newFile.requiredBlocks;
-
-                // Update UI
-                updateFilesDisplay();
-                updateDiskVisualization();
+                createFile(fileName, fileSize, selectedPartition);
+                console.log("File created successfully.");
 
             } catch (error) {
                 alert(error.message);

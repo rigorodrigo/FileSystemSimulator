@@ -180,7 +180,7 @@ function createFile(name, sizeInKB, partition) {
     
     updateBlockVisuals(file);
     
-    partition.usedBlocks += requiredBlocks;
+    partition.usedBlocks += file.requiredBlocks;
     
     // Add file to global state
     const disk = globalState.getDisk();
