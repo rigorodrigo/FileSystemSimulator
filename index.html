@@ -14,6 +14,7 @@
     <script type="module" src="js/modals/onboarding.js"></script>
     <script type="module" src="js/partition/deletePartition.js"></script>
     <script type="module" src="js/partition/partitionSelector.js"></script>
+    <script type="module" src="js/file/deleteFile.js"></script>
 </head>
 <body class="p-4">
     <div class="flex flex-col space-y-4 max-w-[96rem] mx-auto">
@@ -688,6 +689,30 @@
                 </form>
                 <button onclick="confirmDeletePartition()" class="btn btn-soft btn-error">
                     Excluir Partição
+                </button>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <dialog id="delete_file" class="modal">
+        <div class="modal-box">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="text-lg font-bold">Excluir Arquivo</h3>
+            <p class="py-4">Tem certeza que deseja excluir o arquivo "<span id="delete-file-name"></span>"?</p>
+            <p class="text-sm text-gray-600">Esta ação não pode ser desfeita e liberará os blocos ocupados pelo arquivo.</p>
+            <div class="flex justify-between mt-4">
+                <form method="dialog">
+                    <button class="btn btn-soft btn-ghost">
+                        Cancelar
+                    </button>
+                </form>
+                <button onclick="executeFileDelete()" class="btn btn-soft btn-error">
+                    Excluir Arquivo
                 </button>
             </div>
         </div>

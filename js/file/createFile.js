@@ -109,68 +109,6 @@ function allocateFileBlocks(file, partition) {
     return allocationResult;
 }
 
-function updateBlockVisuals(file) {
-    const blocks = globalState.getDisk().blocks;
-    
-    file.allocatedBlocks.forEach((blockIndex, index) => {
-        const block = blocks[blockIndex];
-        if (block) {
-            // Update block appearance
-            block.className = 'w-4 h-4 bg-info inline-block rounded-sm border border-gray-200 cursor-pointer';
-            block.dataset.status = 'used';
-            block.dataset.fileId = file.id;
-            block.dataset.fileName = file.name;
-            
-            // Update tooltip with file information
-            const tooltipContent = block.parentElement.querySelector('.tooltip-content');
-            if (tooltipContent) {
-                let tooltipText = `
-                    <div class="text-center">
-                        <div class="font-bold text-blue-400">Bloco ${blockIndex}</div>
-                        <div class="text-xs text-gray-300">Arquivo: ${file.name}</div>
-                        <div class="text-xs text-gray-300">Tamanho: ${file.sizeInKB} KB</div>
-                `;
-                
-                // Add allocation-specific information
-                switch (file.allocationInfo.type) {
-                    case 'contiguous':
-                        tooltipText += `
-                            <div class="text-xs text-green-300">Alocação: Contígua</div>
-                            <div class="text-xs text-green-300">Posição: ${index + 1}/${file.allocationInfo.totalBlocks}</div>
-                        `;
-                        break;
-                        
-                    case 'linked':
-                        const nextBlock = block.dataset.nextBlock;
-                        tooltipText += `
-                            <div class="text-xs text-yellow-300">Alocação: Encadeada</div>
-                            <div class="text-xs text-yellow-300">Próximo: ${nextBlock !== '-1' ? nextBlock : 'Último'}</div>
-                        `;
-                        break;
-                        
-                    case 'indexed':
-                        if (blockIndex === file.allocationInfo.indexBlock) {
-                            tooltipText += `
-                                <div class="text-xs text-purple-300">Bloco de Índice</div>
-                                <div class="text-xs text-purple-300">Ponteiros: ${file.allocationInfo.fileBlocks.join(', ')}</div>
-                            `;
-                        } else {
-                            const dataIndex = file.allocationInfo.fileBlocks.indexOf(blockIndex);
-                            tooltipText += `
-                                <div class="text-xs text-purple-300">Alocação: Indexada</div>
-                                <div class="text-xs text-purple-300">Dados: Bloco ${dataIndex + 1}/${file.allocationInfo.fileBlocks.length}</div>
-                            `;
-                        }
-                        break;
-                }
-                
-                tooltipText += '</div>';
-                tooltipContent.innerHTML = tooltipText;
-            }
-        }
-    });
-}
-
 function createFile(name, sizeInKB, partition) {
     validateFileCreation(name, sizeInKB, partition);
     
@@ -178,17 +116,10 @@ function createFile(name, sizeInKB, partition) {
     
     allocateFileBlocks(file, partition);
     
-    updateBlockVisuals(file);
-    
     partition.usedBlocks += file.requiredBlocks;
     
-    // Add file to global state
-    const disk = globalState.getDisk();
-    const files = disk.files || [];
-    files.push(file);
-    globalState.setDisk({ ...disk, files });
+    globalState.addFile(file);
     
-    // Update UI
     updateAll();
     
     return file;
