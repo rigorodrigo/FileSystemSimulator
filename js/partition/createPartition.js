@@ -1,5 +1,5 @@
-import globalState from './globalState.js';
-import updateAll from './updater.js'
+import globalState from '../globalState.js';
+import updateAll from '../updater.js'
 
 class Partition {
     constructor(name, startBlock, endBlock, allocationMethod, directoryMethod, spaceManagementMethod) {

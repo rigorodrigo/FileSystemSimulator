@@ -1,4 +1,4 @@
-import globalState from './globalState.js'
+import globalState from '../globalState.js'
 
 export function allocateContiguous(partition, requiredBlocks) {
 

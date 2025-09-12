@@ -1,5 +1,5 @@
-import globalState from './globalState.js';
-import updateBrowser from './updater.js';
+import globalState from '../globalState.js';
+import updateBrowser from '../updater.js';
 
 class PartitionSelector {
     constructor() {

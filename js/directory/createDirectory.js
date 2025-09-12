@@ -1,5 +1,5 @@
-import globalState from './globalState.js'
-import {linearDirectoryMethod,twoLevelsDirectoryMethod,treeDirectoryMethod} from  './createDirectoryMethod.js'
+import globalState from '../globalState.js'
+import {linearDirectoryMethod,twoLevelsDirectoryMethod,treeDirectoryMethod} from  '../createDirectoryMethod.js'
 
 export class Directory {
     constructor(name, sizeInKB, partition, children, blockAllocated, directoryMethod) {
