@@ -1,5 +1,3 @@
-// Global state management for the File System Simulator
-
 class GlobalState {
     constructor() {
         this.diskConfig = {

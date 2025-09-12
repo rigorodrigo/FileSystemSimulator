@@ -1,5 +1,5 @@
-import globalState from '../globalState.js';
-import updateAll from '../updater.js';
+import globalState from '/js/globalState.js';
+import updateAll from '/js/updater.js';
 
 let partitionToDelete = null;
 

@@ -1,5 +1,5 @@
-import createPartition from '../createPartition.js';
-import globalState from '../globalState.js';
+import createPartition from '/js/partition/createPartition.js';
+import globalState from '/js/globalState.js';
 
 function getAvailableBlockRanges() {
     const diskConfig = globalState.getDiskConfig();

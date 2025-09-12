@@ -1,4 +1,4 @@
-import globalState from '../globalState.js'
+import globalState from '/js/globalState.js'
 import {linearDirectoryMethod,twoLevelsDirectoryMethod,treeDirectoryMethod} from  '../createDirectoryMethod.js'
 
 export class Directory {

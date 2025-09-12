@@ -1,4 +1,4 @@
-import globalState from './globalState.js';
+import globalState from '/js/globalState.js';
 
 export default function updateAll() {
     updateStats();

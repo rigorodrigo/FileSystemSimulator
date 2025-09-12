@@ -1,5 +1,5 @@
-import globalState from "../globalState.js";
-import createFile from "../createFile.js";
+import globalState from "/js/globalState.js";
+import createFile from "/js/file/createFile.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     const createFileForm = document.getElementById('create-file-form');

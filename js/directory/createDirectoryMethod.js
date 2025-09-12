@@ -1,5 +1,4 @@
-import globalState from './globalState.js'
-import { Directory, createDirectory } from './createDirectory.js'
+import { Directory } from '/js/directory/createDirectory.js'
 
 export function linearDirectoryMethod(partition) {
     if (!partition.rootDirectory) {

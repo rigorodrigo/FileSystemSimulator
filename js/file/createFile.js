@@ -1,6 +1,6 @@
-import globalState from '../globalState.js';
-import { allocateContiguous, allocateLinked, allocateIndexed } from '../disk/createAllocationMethod.js';
-import updateAll from '../updater.js';
+import globalState from '/js/globalState.js';
+import { allocateContiguous, allocateLinked, allocateIndexed } from '/js/disk/createAllocationMethod.js';
+import updateAll from '/js/updater.js';
 
 class File {
     constructor(name, sizeInKB, partition) {
