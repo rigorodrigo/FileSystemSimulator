@@ -14,6 +14,8 @@ export function updateStats() {
     const blockUsageText = document.getElementById('stat-global-block-usage');
     const diskUsageProgress = document.getElementById('stat-global-disk-usage-progress');
     const diskUsageText = document.getElementById('stat-global-disk-usage');
+    const filesCounts = document.getElementById('stat-global-files-count');
+    const directoriesCounts = document.getElementById('stat-global-directories-count');
 
     const diskConfig = globalState.getDiskConfig();
     const disk = globalState.getDisk();
@@ -48,6 +50,12 @@ export function updateStats() {
     if (diskSizeElem) {
         diskSizeElem.innerHTML = (globalState.getDiskConfig().totalCapacity / 1024).toFixed(2) + "MB" || '0'; // In MB
     }
+
+    if (filesCounts) {
+        filesCounts.textContent = disk.files.length || '0';
+    }
+
+    // TODO Directories and Links
 }
 
 export function updatePartitionsList() {
