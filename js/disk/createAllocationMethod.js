@@ -8,7 +8,7 @@ export function allocateContiguous(partition, requiredBlocks) {
 
     let count = 0, firstIndex = -1;
 
-    for (let i = startBlock; i < endBlock; i++) {
+    for (let i = startBlock; i <= endBlock; i++) {
         if (blocks[i].dataset.status === 'free') {
             if (count === 0) firstIndex = i;
             count++;
@@ -37,7 +37,7 @@ export function allocateLinked(partition, requiredBlocks) {
 
     const freeBlocks = [];
 
-    for (let i = startBlock; i < endBlock; i++) {
+    for (let i = startBlock; i <= endBlock; i++) {
 
         if (blocks[i].dataset.status === 'free') {
             freeBlocks.push(i);
@@ -72,7 +72,7 @@ export function allocateIndexed(partition, requiredBlocks) {
 
     const freeBlocks = [];
 
-    for (let i = startBlock; i < endBlock; i++) {
+    for (let i = startBlock; i <= endBlock; i++) {
         if (blocks[i].dataset.status === 'free') freeBlocks.push(i);
     }
 
