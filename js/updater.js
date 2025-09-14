@@ -1,10 +1,12 @@
 import globalState from '/js/globalState.js';
+import { bitMap, freeBlockList } from '/js/space/freeSpaceManager.js';
 
 export default function updateAll() {
     updateStats();
     updatePartitionsList();
     updateBrowser();
     updateDiskBlocks();
+    updateSpaceManagementVisualizer();
 }
 
 export function updateStats() {
@@ -153,7 +155,7 @@ function createPartitionElement(partition) {
 }
 
 
-function updateBrowser() {
+export function updateBrowser() {
     // Get the current select partatition and all the related files
     const selectedPartition = globalState.getSelectedPartition();
     if (!selectedPartition) return;
@@ -370,4 +372,152 @@ export function updateBlockStatus(blockIndex, status, options = {}) {
     if (options.indexedBlocks !== undefined) {
         block.dataset.indexedBlocks = options.indexedBlocks;
     }
+}
+
+export function updateSpaceManagementVisualizer() {
+    const visualizerContainer = document.getElementById('space-management-visualizer');
+    if (!visualizerContainer) return;
+    console.log("Updating free space visualization")
+
+    const selectedPartition = globalState.getSelectedPartition();
+    
+    if (!selectedPartition) {
+        visualizerContainer.innerHTML = `
+            <div class="text-center text-gray-500 py-8">
+                <p class="text-lg mb-2">Demonstração do método de gerenciamento de espaço</p>
+                <p class="text-sm">Selecione uma partição para ver como o espaço livre é gerenciado</p>
+            </div>
+        `;
+        return;
+    }
+
+    visualizerContainer.innerHTML = '';
+
+    // Create header with partition info
+    const header = document.createElement('div');
+    header.className = 'mb-4 p-2 bg-primary/10 rounded-lg';
+    header.innerHTML = `
+        <h3 class="font-bold text-lg">${selectedPartition.spaceManagementMethod === 'bitmap' ? 'Bitmap' : 'Lista de Blocos Livres'}</h3>
+    `;
+    visualizerContainer.appendChild(header);
+
+    if (selectedPartition.spaceManagementMethod === 'bitmap') {
+        renderBitmapVisualization(selectedPartition, visualizerContainer);
+    } else if (selectedPartition.spaceManagementMethod === 'freeBlockList') {
+        renderFreeBlockListVisualization(selectedPartition, visualizerContainer);
+    }
+}
+
+function renderBitmapVisualization(partition, container) {
+    const bitmap = bitMap(partition);
+    
+    const content = document.createElement('div');
+    content.className = 'space-y-4';
+    
+    // Legend
+    const legend = document.createElement('div');
+    legend.className = 'flex justify-center gap-4 mb-4';
+    legend.innerHTML = `
+        <div class="flex items-center gap-2">
+            <div class="w-4 h-4 bg-success rounded border"></div>
+            <span class="text-sm">0 = Livre</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <div class="w-4 h-4 bg-error rounded border"></div>
+            <span class="text-sm">1 = Usado</span>
+        </div>
+    `;
+    content.appendChild(legend);
+    
+    // Bitmap visualization
+    const bitmapContainer = document.createElement('div');
+    bitmapContainer.className = 'max-h-64 overflow-y-auto p-4 bg-base-200 rounded-lg';
+    
+    const bitmapGrid = document.createElement('div');
+    bitmapGrid.className = 'flex flex-wrap gap-1';
+    
+    bitmap.forEach((bit, index) => {
+        const actualBlockIndex = partition.startBlock + index;
+        const bitElement = document.createElement('div');
+        bitElement.className = `w-4 h-4 rounded-sm border border-gray-200 m-0.5 flex items-center justify-center text-xs font-mono ${
+            bit === 0 ? 'bg-success text-white' : 'bg-error text-white'
+        }`;
+        bitElement.textContent = bit;
+        bitElement.title = `Bloco ${actualBlockIndex}: ${bit === 0 ? 'Livre' : 'Usado'}`;
+        bitmapGrid.appendChild(bitElement);
+    });
+    
+    bitmapContainer.appendChild(bitmapGrid);
+    content.appendChild(bitmapContainer);
+    
+    // Statistics
+    const stats = document.createElement('div');
+    stats.className = 'mt-4 p-3 bg-base-300 rounded-lg';
+    const freeBlocks = bitmap.filter(bit => bit === 0).length;
+    const usedBlocks = bitmap.filter(bit => bit === 1).length;
+    stats.innerHTML = `
+        <div class="text-center">
+            <div class="flex justify-around">
+                <span class="text-success">Livres: ${freeBlocks}</span>
+                <span class="text-error">Usados: ${usedBlocks}</span>
+                <span>Total: ${bitmap.length}</span>
+            </div>
+        </div>
+    `;
+    content.appendChild(stats);
+    
+    container.appendChild(content);
+}
+
+function renderFreeBlockListVisualization(partition, container) {
+    const freeBlocks = freeBlockList(partition);
+    
+    const content = document.createElement('div');
+    content.className = 'space-y-4';
+    
+    // Free blocks list
+    const listContainer = document.createElement('div');
+    listContainer.className = 'max-h-64 overflow-y-auto p-4 bg-base-200 rounded-lg';
+    
+    if (freeBlocks.length === 0) {
+        listContainer.innerHTML = `
+            <div class="text-center text-base-100 py-8">
+                <p class="text-lg">Nenhum bloco livre</p>
+                <p class="text-sm">Todos os blocos da partição estão sendo utilizados</p>
+            </div>
+        `;
+    } else {
+        const listGrid = document.createElement('div');
+        listGrid.className = 'flex flex-wrap gap-2';
+        
+        freeBlocks.forEach(blockIndex => {
+            const blockElement = document.createElement('div');
+            blockElement.className = 'p-2 bg-success text-white rounded text-center font-mono text-sm';
+            blockElement.textContent = blockIndex;
+            blockElement.title = `Bloco livre: ${blockIndex}`;
+            listGrid.appendChild(blockElement);
+        });
+        
+        listContainer.appendChild(listGrid);
+    }
+    
+    content.appendChild(listContainer);
+    
+    // Statistics
+    const stats = document.createElement('div');
+    stats.className = 'mt-4 p-2 bg-base-300 rounded-lg';
+    const totalBlocks = partition.totalBlocks;
+    const usedBlocks = totalBlocks - freeBlocks.length;
+    stats.innerHTML = `
+        <div class="text-center">
+            <div class="flex justify-around">
+                <span class="text-success">Blocos Livres: ${freeBlocks.length}</span>
+                <span class="text-error">Blocos Usados: ${usedBlocks}</span>
+                <span>Total: ${totalBlocks}</span>
+            </div>
+        </div>
+    `;
+    content.appendChild(stats);
+    
+    container.appendChild(content);
 }

@@ -1,5 +1,4 @@
 import createDisk from '/js/disk/createDisk.js';
-import { bitMap, freeBlockList } from '/js/disk/freeSpaceManager.js';
 import globalState from '/js/globalState.js';
 import updateAll from '/js/updater.js';
 
@@ -31,9 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const diskData = createDisk(blockQuantity, blockSize);
             globalState.setDisk({ blocks: diskData.blocks });
-
-            const bitmap = bitMap();
-            const freeBlocksList = freeBlockList();
 
             updateAll();
         });
