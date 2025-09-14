@@ -1,7 +1,7 @@
-import createDisk from '../createDisk.js';
-import { bitMap, freeBlockList } from '../freeSpaceManager.js';
-import globalState from '../globalState.js';
-import updateAll from '../updater.js';
+import createDisk from '/js/disk/createDisk.js';
+import { bitMap, freeBlockList } from '/js/disk/freeSpaceManager.js';
+import globalState from '/js/globalState.js';
+import updateAll from '/js/updater.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const formEditBlocks = document.getElementById('form-edit-blocks');

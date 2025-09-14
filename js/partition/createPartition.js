@@ -1,5 +1,5 @@
-import globalState from './globalState.js';
-import updateAll from './updater.js'
+import globalState from '/js/globalState.js';
+import updateAll, { updateBlockStatus } from '/js/updater.js';
 
 class Partition {
     constructor(name, startBlock, endBlock, allocationMethod, directoryMethod, spaceManagementMethod) {
@@ -12,6 +12,7 @@ class Partition {
         this.directoryMethod = directoryMethod;
         this.spaceManagementMethod = spaceManagementMethod;
         this.usedBlocks = 0;
+        this.rootDirectory = null;
 
         const blockSize = globalState.getDiskConfig().blockSize;
         this.sizeInBytes = this.totalBlocks * blockSize * 1024;
@@ -57,27 +58,12 @@ function validatePartition(name, startBlock, endBlock) {
 function updateDiskBlocks(partition) {
 
     const disk = globalState.getDisk();
-    const blocks = disk.blocks;
 
     for (let i = partition.startBlock; i <= partition.endBlock; i++) {
-        if (blocks[i]) {
-            blocks[i].className = 'w-4 h-4 bg-success inline-block rounded-sm border border-gray-200 cursor-pointer';
-            blocks[i].dataset.status = 'free';
-            blocks[i].dataset.partitionId = partition.id;
-            blocks[i].dataset.partitionName = partition.name;
-
-            const tooltipContent = blocks[i].parentElement.querySelector('.tooltip-content');
-            if (tooltipContent) {
-                const blockSize = globalState.getDiskConfig().blockSize;
-                tooltipContent.innerHTML = `
-                    <div class="text-center">
-                        <div class="font-bold text-green-400">Bloco ${i}</div>
-                        <div class="text-xs text-gray-300">Status: Livre</div>
-                        <div class="text-xs text-gray-300">Partição: ${partition.name}</div>
-                    </div>
-                `;
-            }
-        }
+        updateBlockStatus(i, 'free', {
+            partitionId: partition.id,
+            partitionName: partition.name
+        });
     }
 }
 

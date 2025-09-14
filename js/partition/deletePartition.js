@@ -1,5 +1,5 @@
-import globalState from './globalState.js';
-import updateAll from './updater.js';
+import globalState from '/js/globalState.js';
+import updateAll, { updateBlockStatus } from '/js/updater.js';
 
 let partitionToDelete = null;
 
@@ -38,25 +38,11 @@ window.confirmDeletePartition = function() {
         
         const partition = partitions[partitionIndex];
         
-        const blocks = disk.blocks || [];
         for (let i = partition.startBlock; i <= partition.endBlock; i++) {
-            if (blocks[i]) {
-                blocks[i].className = 'w-4 h-4 bg-neutral-content inline-block rounded-sm border border-gray-200 cursor-pointer';
-                blocks[i].dataset.status = 'unallocated';
-                delete blocks[i].dataset.partitionId;
-                delete blocks[i].dataset.partitionName;
-                
-                const tooltipContent = blocks[i].parentElement.querySelector('.tooltip-content');
-                if (tooltipContent) {
-                    const blockSize = globalState.getDiskConfig().blockSize;
-                    tooltipContent.innerHTML = `
-                        <div class="text-center">
-                            <div class="font-bold text-gray-400">Bloco ${i}</div>
-                            <div class="text-xs text-gray-300">Status: Não Alocado</div>
-                        </div>
-                    `;
-                }
-            }
+            updateBlockStatus(i, 'unallocated', {
+                partitionId: null,
+                partitionName: null
+            });
         }
         
         // Remove partition from array

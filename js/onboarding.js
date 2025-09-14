@@ -1,6 +1,6 @@
-import createDisk from './createDisk.js';
-import globalState from './globalState.js';
-import updateStats from './updater.js';
+import createDisk from '/js/disk/createDisk.js';
+import globalState from '/js/globalState.js';
+import updateStats from '/js/updater.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const formOnboarding = document.getElementById('form-onboarding');
