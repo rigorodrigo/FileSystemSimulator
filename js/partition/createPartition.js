@@ -10,7 +10,8 @@ class Partition {
         this.totalBlocks = this.endBlock - this.startBlock + 1;
         this.allocationMethod = allocationMethod;
         this.directoryMethod = directoryMethod;
-        this.spaceManagementMethod = spaceManagementMethod;
+        this.spaceManagementMethod = spaceManagementMethod; // bitmap or freeBlockList
+        this.spaceManagementData = null;
         this.usedBlocks = 0;
         this.rootDirectory = null;
 
@@ -73,6 +74,17 @@ function createPartition(name, startBlock, endBlock, allocationMethod, directory
 
     validatePartition(name, startBlock, endBlock);
 
+    // Pre fill the space management data based on the selected method
+    let spaceManagementData = null;
+    if (spaceManagementMethod === 'bitmap') {
+        const totalBlocks = endBlock - startBlock + 1;
+        spaceManagementData = new Array(totalBlocks).fill(0); // 0 = free, 1 = used
+    } else if (spaceManagementMethod === 'freeBlockList') {
+        spaceManagementData = [];
+        for (let i = startBlock; i <= endBlock; i++) {
+            spaceManagementData.push(i);
+        }
+    }
     const partition = new Partition(
         name,
         startBlock,
@@ -84,8 +96,6 @@ function createPartition(name, startBlock, endBlock, allocationMethod, directory
 
     existingPartition.push(partition);
     globalState.setDisk({ ...disk,partitions: existingPartition });
-
-
 
     updateDiskBlocks(partition);
     updateAll();
