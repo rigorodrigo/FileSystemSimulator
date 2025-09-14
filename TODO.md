@@ -1,6 +1,5 @@
 ## Bugs
 ### Lógica
-- Última bloco da partição não está podendo ser alocado
 - Criar um diretório padrão para ser o root de todos os arquivos
 
 ### Visualização
