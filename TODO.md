@@ -1,6 +1,4 @@
 ## Bugs
-### Lógica
-- Criar um diretório padrão para ser o root de todos os arquivos
 
 ### Visualização
 - Arquivos não estão em uma visualização decente

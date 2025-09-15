@@ -1,5 +1,6 @@
 import globalState from '/js/globalState.js';
 import updateAll, { updateBlockStatus } from '/js/updater.js';
+import { Directory } from '../directory/createDirectory.js'
 
 class Partition {
     constructor(name, startBlock, endBlock, allocationMethod, directoryMethod, spaceManagementMethod) {
@@ -18,6 +19,8 @@ class Partition {
         const blockSize = globalState.getDiskConfig().blockSize;
         this.sizeInBytes = this.totalBlocks * blockSize * 1024;
         this.sizeInMB = this.sizeInBytes / (1024 * 1024);
+
+        this.rootDirectory = new Directory ('/', 0, this, [], null, directoryMethod);
     }
 
     getUsagePercentage() {
