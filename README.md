@@ -22,6 +22,22 @@ O sistema de arquivos é uma implementação em recurso de  software feita pelo 
 
 ## Como executar
 
+Para usar o simulador, basta acessar o link [SimuladorSistemaDeArquivos] (https://filesystemsimulator.pages.dev/). Ao entrar no site, você se deparará com uma tela mais ou menos assim:
+
+![alt text](image.png)
+
+Nela, você definirá quantos blocos terá o seu disco e qual o tamanho de cada bloco. Por óbvio, o tamanho em Mb do disco será a multiplicação destes dois valores.Obeserve que que há uma recomendação de tamanho de cada entre 4 e 64 Kb No exemplo, eu adicionei 64 blocos de 2 Kb , totalizando um pouco mais 120 Kb.
+
+![alt text](image-1.png)
+
+Disco criado! Agora você pode gerenciar suas partições, diretórios e arquivos. 
+
+![alt text](image-2.png)
+
+Criando uma partição:
+
+![alt text](image-3.png)
+
 ## Autores
 
 - **Nomes :** Artur Ricieri Tretini Benedetti, Rodrigo Rigo
