@@ -8,7 +8,11 @@
 - Estatísticas globais
   - % de fragmentação interna
 - Links
-- No onboarding, já requisitar as informações da primeira partição
+- Colocar as informações de uso
+  - Stats - Arquivos
+  - Stats - Diretõrios
+  - Explicar os diferentes tipos de alocações, diretõrios, etc.
+  - Ajuda funcional
 
 ### Browser
 - Path
