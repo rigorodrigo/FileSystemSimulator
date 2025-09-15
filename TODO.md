@@ -8,6 +8,7 @@
 - Estatísticas globais
   - % de fragmentação interna
 - Links
+- No onboarding, já requisitar as informações da primeira partição
 
 ### Browser
 - Path
