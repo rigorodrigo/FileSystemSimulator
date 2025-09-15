@@ -1,6 +1,6 @@
 import globalState from '/js/globalState.js';
 import updateAll, { updateBlockStatus } from '/js/updater.js';
-import { Directory } from '../directory/createDirectory.js'
+import { Directory } from '/js/directory/createDirectory.js'
 
 class Partition {
     constructor(name, startBlock, endBlock, allocationMethod, directoryMethod, spaceManagementMethod) {

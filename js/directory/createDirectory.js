@@ -1,5 +1,4 @@
 import globalState from '/js/globalState.js'
-import {linearDirectoryMethod,twoLevelsDirectoryMethod,treeDirectoryMethod} from  '../createDirectoryMethod.js'
 
 export class Directory {
     constructor(name, sizeInKB, partition, children, blockAllocated, directoryMethod) {
@@ -72,7 +71,7 @@ function allocateDirectoryBlocks(directory, partition) {
     return allocationResult;
 }
 
-f/*unction directoryMethodSelector(partition) {
+/*function directoryMethodSelector(partition) {
     switch(partition.directoryMethod) {
         case 'Linear':
             return linearDirectoryMethod(partition);
