@@ -26,7 +26,7 @@ Para usar o simulador, basta acessar o link [Simulador Sistema De Arquivos](http
 
 ![alt text](/imgs/image.png)
 
-Nela, você definirá quantos blocos terá o seu disco e qual o tamanho de cada bloco. Por óbvio, o tamanho em Mb do disco será a multiplicação destes dois valores.Obeserve que que há uma recomendação de tamanho de cada entre 4 e 64 Kb No exemplo, eu adicionei 64 blocos de 2 Kb , totalizando um pouco mais 120 Kb.
+Nela, você definirá quantos blocos terá o seu disco e qual o tamanho de cada bloco. Por óbvio, o tamanho em Mb do disco será a multiplicação destes dois valores.Obeserve que que há uma recomendação de tamanho de cada disco ser entre 4 e 64 Kb. No exemplo, eu adicionei 64 blocos de 2 Kb , totalizando um pouco mais 120 Kb.
 
 ![alt text](/imgs/image-1.png)
 
