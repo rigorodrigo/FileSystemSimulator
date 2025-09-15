@@ -11,16 +11,14 @@ class Partition {
         this.totalBlocks = this.endBlock - this.startBlock + 1;
         this.allocationMethod = allocationMethod;
         this.directoryMethod = directoryMethod;
+        this.rootDirectory = new Directory ('/', 0, this, [], null, directoryMethod);
         this.spaceManagementMethod = spaceManagementMethod; // bitmap or freeBlockList
         this.spaceManagementData = null;
         this.usedBlocks = 0;
-        this.rootDirectory = null;
-
         const blockSize = globalState.getDiskConfig().blockSize;
         this.sizeInBytes = this.totalBlocks * blockSize * 1024;
         this.sizeInMB = this.sizeInBytes / (1024 * 1024);
 
-        this.rootDirectory = new Directory ('/', 0, this, [], null, directoryMethod);
     }
 
     getUsagePercentage() {
