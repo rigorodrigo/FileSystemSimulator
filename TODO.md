@@ -11,8 +11,9 @@
 - Colocar as informações de uso
   - Stats - Arquivos
   - Stats - Diretõrios
-  - Explicar os diferentes tipos de alocações, diretõrios, etc.
+  - Explicar os diferentes tipos de alocações, diretórios, etc.
   - Ajuda funcional
+  - Fragmentação internal
 
 ### Browser
 - Path

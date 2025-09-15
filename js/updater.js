@@ -21,6 +21,8 @@ export function updateStats() {
     const diskUsageText = document.getElementById('stat-global-disk-usage');
     const filesCounts = document.getElementById('stat-global-files-count');
     const directoriesCounts = document.getElementById('stat-global-directories-count');
+    const internalFragmentationElem = document.getElementById('stat-global-internal-fragmentation');
+    const internalFragmentationPercent = document.getElementById('stat-global-internal-fragmentation-percent');
 
     const diskConfig = globalState.getDiskConfig();
     const disk = globalState.getDisk();
@@ -62,6 +64,19 @@ export function updateStats() {
 
     if (directoriesCounts) {
         directoriesCounts.textContent = disk.directories.length || '0';
+    }
+
+    const blockSize = diskConfig.blockSize || 1; // Avoid division by zero
+    const internalFragmentation = (usedBlocks * blockSize) - usedSpace;
+
+    if (internalFragmentationElem) {
+       internalFragmentationElem.textContent = `${internalFragmentation} KB`;
+    }
+
+    if (internalFragmentationPercent) {
+        let internalFragmentationUsage = ((internalFragmentation / usedSpace) * 100).toFixed(2);
+        if (usedSpace === 0) internalFragmentationUsage = '0.00';
+        internalFragmentationPercent.textContent = `${internalFragmentationUsage}%`;
     }
 }
 
