@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script type="module" src="js/index.js"></script>
-    <script type="module" src="js/onboarding.js"></script>
     <script type="module" src="js/modals/edit_blocks.js"></script>
     <script type="module" src="js/modals/create_partition.js"></script>
     <script type="module" src="js/modals/file_handler.js"></script>
@@ -278,26 +277,79 @@
     <!-- Modals para onboarding -->
 
     <dialog id="onboarding" class="modal">
-        <div class="modal-box">
+        <div class="modal-box max-w-4xl">
             <h3 class="text-lg font-bold">Primeiros passos!</h3>
-            <p class="py-4">Para iniciar o simulador nós precisamos que você dê algumas informações iniciais sobre o disco.</p>
+            <p class="py-4">Para iniciar o simulador nós precisamos que você dê algumas informações iniciais sobre o disco e crie uma partição inicial.</p>
             <form id="form-onboarding" action="">
-                <label class="input w-full">
-                    Quantidade de blocos:
-                    <input type="number" name="onboarding_blocks" class="grow w-full" />
-                </label>
-                <p class="text-sm text-base-content/80 px-2">Quantos blocos o disco irá ter? Essa é a unidade mais básica de armazenamento, um arquivo irá ocupar, no mínimo, um bloco.</p>
-                <p class="text-sm text-base-content/80 px-2 mt-2">Recomenda-se um número entre 512 e 2048, mais do que isso pode dificultar a visualização.</p>
+                <div class="">
+                    <!-- Configuração do Disco -->
+                    <div>
+                        <h4 class="font-bold text-lg mb-4">Configuração do Disco</h4>
+                        
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="input w-full">
+                                    Quantidade de blocos:
+                                    <input type="number" name="onboarding_blocks" class="grow w-full" min="100" max="4096" value="128" />
+                                </label>
+                                <p class="text-sm text-base-content/80 px-2 mb-4">Quantos blocos o disco irá ter? Recomenda-se entre 128 e 1024.</p>
+                            </div>
+                            <div>
+                                <label class="input w-full">
+                                    Tamanho de cada bloco (Em KB):
+                                    <input type="number" name="onboarding_block_size" class="grow w-full" min="1" max="128" value="4" />
+                                </label>
+                                <p class="text-sm text-base-content/80 px-2">Recomenda-se entre 4KB e 64KB.</p>
+                            </div>
+                        </div>
+                    </div>
 
-                <label class="input w-full mt-4">
-                    Tamanho de cada bloco (Em KB):
-                    <input type="number" name="onboarding_block_size" class="grow w-full" />
-                </label>
-                <p class="text-sm text-base-content/80 px-2">Qual será o tamanho de cada bloco? Quanto maior for, mais espaço poderá ser mal utilizado, quanto menor for maior a perda de performance.</p>
-                <p class="text-sm text-base-content/80 px-2 mt-2">Recomenda-se um tamanho entre 4KB e 64KB.</p>
-                <div class="flex justify-end mt-4">
-                    <button class="btn btn-soft btn-success">
-                        Inicializar disco
+                    <!-- Configuração da Partição Inicial -->
+                    <div>
+                        <h4 class="font-bold text-lg mb-4">Partição Inicial</h4>
+                        
+                        <div>
+                            <label class="input w-full">
+                                Nome:
+                                <input name="onboarding_partition_name" type="text" class="grow w-full" placeholder="Sistema" value="Sistema" />
+                            </label>
+                            
+                            <label class="select w-full grid grid-cols-2 mt-2">
+                                Algorítmo de alocação:
+                                <select name="onboarding_allocation_method" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Contígua">Contígua</option>
+                                    <option value="Encadeada">Encadeada</option>
+                                    <option value="FAT">FAT</option>
+                                    <option value="Indexada Combinada">Indexada Combinada</option>
+                                </select>
+                            </label>
+                            
+                            <label class="select w-full grid grid-cols-2 mt-2">
+                                Método de diretórios:
+                                <select name="onboarding_directory_method" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="Linear">Linear</option>
+                                    <option value="Dois Níveis">Dois Níveis</option>
+                                    <option value="Árvore">Árvore</option>
+                                    <option value="Grafo Acíclico">Grafo Acíclico</option>
+                                </select>
+                            </label>
+                            
+                            <label class="select w-full grid grid-cols-2 mt-2">
+                                Gerenciamento de espaço livre:
+                                <select name="onboarding_space_management" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="bitmap">Mapa de bits</option>
+                                    <option value="freeBlockList">Lista de blocos livres</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end mt-6">
+                    <button type="submit" class="btn btn-soft btn-success">
+                        Inicializar Sistema
                     </button>
                 </div>
             </form>
