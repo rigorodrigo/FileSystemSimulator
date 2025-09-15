@@ -8,6 +8,7 @@ class File {
         this.name = name;
         this.sizeInKB = parseInt(sizeInKB);
         this.partitionId = partition.id;
+        this.directoryPath = globalState.getCurrentPath();
         this.createdAt = new Date();
         
         // Calculate required blocks

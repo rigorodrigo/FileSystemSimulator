@@ -11,6 +11,7 @@
     <script type="module" src="js/modals/edit_blocks.js"></script>
     <script type="module" src="js/modals/create_partition.js"></script>
     <script type="module" src="js/modals/file_handler.js"></script>
+    <script type="module" src="js/modals/create_directory.js"></script>
     <script type="module" src="js/modals/onboarding.js"></script>
     <script type="module" src="js/partition/deletePartition.js"></script>
     <script type="module" src="js/partition/partitionSelector.js"></script>
@@ -217,26 +218,9 @@
                     <div class="flex h-auto gap-2">
                         <!-- Barra Lateral -->
                         <div class="min-w-48 bg-base-200 rounded-lg py-2">
-                            <div class="font-semibold mb-2 text-center">Arquivos</div>
-                            <ul class="menu w-full">
-                                <li>
-                                    <details open>
-                                    <summary>home</summary>
-                                    <ul>
-                                        <li>
-                                        <details open>
-                                            <summary>user</summary>
-                                            <ul>
-                                            <li><a>Documents</a></li>
-                                            <li><a>Downloads</a></li>
-                                            </ul>
-                                        </details>
-                                        </li>
-                                        <li><a>user2</a></li>
-                                        <li><a>user3</a></li>
-                                    </ul>
-                                    </details>
-                                </li>
+                            <div class="font-semibold mb-2 text-center">Navegação</div>
+                            <ul class="menu w-full" id="file-browser-sidebar">
+                                <li><span class="text-gray-500 text-sm">Selecione uma partição</span></li>
                             </ul>
                         </div>
                         <!-- End Barra Lateral -->
@@ -245,8 +229,13 @@
                         <div class="flex-1 flex flex-col gap-2 p-2 pl-0">
                             <!-- Header com path e opções -->
                             <div class="flex justify-between items-center">
-                                <div class="flex-1 bg-base-300 p-2 rounded-lg mr-2">
-                                    /home/user/Documents
+                                <div class="flex items-center gap-2 flex-1">
+                                    <button id="back-to-parent" class="btn btn-sm btn-ghost" onclick="navigateToParent()" style="display: none;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                                    </button>
+                                    <div class="flex-1 bg-base-300 p-2 rounded-lg" id="file-browser-path">
+                                        /
+                                    </div>
                                 </div>
 
                                 <div>
@@ -254,7 +243,7 @@
                                     <summary class="btn btn-soft btn-primary text-center align-middle text-bold text-lg md:text-2xl">+</summary>
                                     <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                                         <li><a onclick="create_file.showModal()">Criar Arquivo</a></li>
-                                        <li><a onclick="create_directory.showModal()">Criar Diretório</a></li>
+                                        <li><a onclick="updateDirectoryCreationModal(); create_directory.showModal()">Criar Diretório</a></li>
                                     </ul>
                                     </details>
                                 </div>
@@ -607,24 +596,29 @@
             </form>
             <h3 class="text-lg font-bold">Criar Diretório</h3>
 
-            <div class="mt-2">
-                <form action="">
-                    <label class="input w-full">
-                        Nome:
-                        <input type="text" class="grow w-full" placeholder="superDiretorio" />
-                    </label>
-                </form>
+            <div class="bg-info/10 p-3 rounded-lg mb-4" id="selected-partition-info-dir">
+                <div class="text-sm text-gray-600">Partição selecionada:</div>
+                <div class="font-semibold" id="selected-partition-name-dir">Nenhuma partição selecionada</div>
+                <div class="text-sm text-gray-600 mt-1">Localização atual:</div>
+                <div class="font-semibold" id="current-path-dir">/</div>
             </div>
 
-            <div class="flex justify-between mt-4">
-                <form method="dialog">
-                    <button class="btn btn-soft btn-ghost">
-                        Cancelar
-                    </button>
+            <div class="mt-2">
+                <form action="" id="create-directory-form">
+                    <label class="input w-full">
+                        Nome:
+                        <input type="text" id="directory-create-name" class="grow w-full" placeholder="meuDiretorio" />
+                    </label>
+                    
+                    <div class="flex justify-between mt-4">
+                        <button type="button" onclick="create_directory.close()" class="btn btn-soft btn-ghost">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-soft btn-success">
+                            Criar Diretório
+                        </button>
+                    </div>
                 </form>
-                <button class="btn btn-soft btn-success">
-                    Criar Diretório
-                </button>
             </div>
         </div>
         <form method="dialog" class="modal-backdrop">

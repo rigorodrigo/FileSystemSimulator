@@ -7,6 +7,8 @@ export default function updateAll() {
     updateBrowser();
     updateDiskBlocks();
     updateSpaceManagementVisualizer();
+    updatePathDisplay();
+    updateFileBrowserSidebar();
 }
 
 export function updateStats() {
@@ -58,7 +60,9 @@ export function updateStats() {
         filesCounts.textContent = disk.files.length || '0';
     }
 
-    // TODO Directories and Links
+    if (directoriesCounts) {
+        directoriesCounts.textContent = disk.directories.length || '0';
+    }
 }
 
 export function updatePartitionsList() {
@@ -160,20 +164,45 @@ export function updateBrowser() {
     const selectedPartition = globalState.getSelectedPartition();
     if (!selectedPartition) return;
 
-    const files = globalState.getFilesInPartition(selectedPartition.id);
+    const currentPath = globalState.getCurrentPath();
+    const files = globalState.getFilesInDirectory(selectedPartition.id, currentPath);
+    const directories = globalState.getDirectoriesInPath(selectedPartition.id, currentPath);
 
     // Update file list in the UI
     const fileListElem = document.getElementById('file-browser-items');
     if (!fileListElem) return;
     fileListElem.innerHTML = '';
 
+    // Add directories
+    directories.forEach(directory => {
+        const dirElem = document.createElement('div');
+        dirElem.className = 'border p-2 rounded-lg cursor-pointer hover:bg-warning/15 transition-colors max-w-fit max-h-fit';
+        dirElem.innerHTML = `
+            <div class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2l5 0 2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                <span class="font-medium">${directory.name}</span>
+            </div>
+        `;
+        dirElem.onclick = () => {
+            globalState.navigateToDirectory(directory.name);
+            window.updateFilesList();
+            window.updatePathDisplay();
+            updateFileBrowserSidebar();
+        };
+        fileListElem.appendChild(dirElem);
+    });
+
+    // Add files
     files.forEach(file => {
         const fileElem = document.createElement('div');
         fileElem.className = 'border p-2 rounded-lg space-y-2 cursor-pointer hover:bg-primary/15 transition-colors max-w-fit max-h-fit';
         fileElem.dataset.fileId = file.id;
         fileElem.innerHTML = `
             <div class="flex justify-between items-center">
-                <span class="font-medium">${file.name}</span>
+                <div class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+                    <span class="font-medium">${file.name}</span>
+                </div>
                 <button onclick="confirmDeleteFile('${file.id}', '${file.name}')">
                     <svg class="text-error/30 hover:text-error cursor-pointer transition" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
                 </button>
@@ -183,8 +212,10 @@ export function updateBrowser() {
         fileListElem.appendChild(fileElem);
     });
 
-    if (files.length === 0) {
+    if (files.length === 0 && directories.length === 0 && currentPath === '/') {
         fileListElem.innerHTML = '<div class="text-center text-gray-500 py-4">Nenhum arquivo nesta partição</div>';
+    } else if (files.length === 0 && directories.length === 0) {
+        fileListElem.innerHTML = '<div class="text-center text-gray-500 py-4">Diretório vazio</div>';
     }
 }
 
@@ -301,39 +332,51 @@ function getBlockTooltip(blockIndex) {
             
         case 'free':
             tooltip += `<div class="text-green-300">Livre</div>`;
-            tooltip += `<div class="text-xs">Partição: ${status.partition.name}</div>`;
+            if (status.partition && status.partition.name) {
+                tooltip += `<div class="text-xs">Partição: ${status.partition.name}</div>`;
+            }
             break;
             
         case 'used':
             tooltip += `<div class="text-blue-300">Usado</div>`;
-            tooltip += `<div class="text-xs">Arquivo: ${status.file.name}</div>`;
-            tooltip += `<div class="text-xs">Partição: ${status.partition.name}</div>`;
-            tooltip += `<div class="text-xs">Tamanho: ${status.file.sizeInKB} KB</div>`;
+            if (status.file && status.file.name) {
+                tooltip += `<div class="text-xs">Arquivo: ${status.file.name}</div>`;
+                tooltip += `<div class="text-xs">Tamanho: ${status.file.sizeInKB} KB</div>`;
+            }
+            if (status.partition && status.partition.name) {
+                tooltip += `<div class="text-xs">Partição: ${status.partition.name}</div>`;
+            }
             
             // Add allocation-specific information
-            if (status.file.allocationInfo) {
+            if (status.file && status.file.allocationInfo) {
                 switch (status.file.allocationInfo.type) {
                     case 'contiguous':
-                        const position = status.file.allocatedBlocks.indexOf(blockIndex) + 1;
-                        tooltip += `<div class="text-xs text-green-300">Alocação: Contígua</div>`;
-                        tooltip += `<div class="text-xs text-green-300">Posição: ${position}/${status.file.allocationInfo.totalBlocks}</div>`;
+                        if (status.file.allocatedBlocks) {
+                            const position = status.file.allocatedBlocks.indexOf(blockIndex) + 1;
+                            tooltip += `<div class="text-xs text-green-300">Alocação: Contígua</div>`;
+                            tooltip += `<div class="text-xs text-green-300">Posição: ${position}/${status.file.allocationInfo.totalBlocks}</div>`;
+                        }
                         break;
                         
                     case 'linked':
                         // Find next block in chain
-                        const currentIndex = status.file.allocatedBlocks.indexOf(blockIndex);
-                        const nextBlock = currentIndex < status.file.allocatedBlocks.length - 1 
-                            ? status.file.allocatedBlocks[currentIndex + 1] 
-                            : null;
-                        tooltip += `<div class="text-xs text-yellow-300">Alocação: Encadeada</div>`;
-                        tooltip += `<div class="text-xs text-yellow-300">Próximo: ${nextBlock || 'Último'}</div>`;
+                        if (status.file.allocatedBlocks) {
+                            const currentIndex = status.file.allocatedBlocks.indexOf(blockIndex);
+                            const nextBlock = currentIndex < status.file.allocatedBlocks.length - 1 
+                                ? status.file.allocatedBlocks[currentIndex + 1] 
+                                : null;
+                            tooltip += `<div class="text-xs text-yellow-300">Alocação: Encadeada</div>`;
+                            tooltip += `<div class="text-xs text-yellow-300">Próximo: ${nextBlock || 'Último'}</div>`;
+                        }
                         break;
                         
                     case 'indexed':
                         if (blockIndex === status.file.allocationInfo.indexBlock) {
                             tooltip += `<div class="text-xs text-purple-300">Bloco de Índice</div>`;
-                            tooltip += `<div class="text-xs text-purple-300">Ponteiros: ${status.file.allocationInfo.fileBlocks.join(', ')}</div>`;
-                        } else {
+                            if (status.file.allocationInfo.fileBlocks) {
+                                tooltip += `<div class="text-xs text-purple-300">Ponteiros: ${status.file.allocationInfo.fileBlocks.join(', ')}</div>`;
+                            }
+                        } else if (status.file.allocationInfo.fileBlocks) {
                             const dataIndex = status.file.allocationInfo.fileBlocks.indexOf(blockIndex);
                             tooltip += `<div class="text-xs text-purple-300">Alocação: Indexada</div>`;
                             tooltip += `<div class="text-xs text-purple-300">Dados: Bloco ${dataIndex + 1}/${status.file.allocationInfo.fileBlocks.length}</div>`;
@@ -345,7 +388,9 @@ function getBlockTooltip(blockIndex) {
             
         case 'directory':
             tooltip += `<div class="text-yellow-300">Diretório</div>`;
-            tooltip += `<div class="text-xs">Partição: ${status.partition.name}</div>`;
+            if (status.partition && status.partition.name) {
+                tooltip += `<div class="text-xs">Partição: ${status.partition.name}</div>`;
+            }
             break;
     }
     
@@ -521,3 +566,137 @@ function renderFreeBlockListVisualization(partition, container) {
     
     container.appendChild(content);
 }
+
+export function updatePathDisplay() {
+    const selectedPartition = globalState.getSelectedPartition();
+    const pathElem = document.getElementById('file-browser-path');
+    const backButton = document.getElementById('back-to-parent');
+    
+    if (!pathElem) return;
+    
+    if (!selectedPartition) {
+        pathElem.textContent = 'Nenhuma partição selecionada';
+        if (backButton) backButton.style.display = 'none';
+        return;
+    }
+    
+    const currentPath = globalState.getCurrentPath();
+    pathElem.textContent = `${selectedPartition.name}:${currentPath}`;
+    
+    // Show/hide back button based on current path
+    if (backButton) {
+        backButton.style.display = currentPath === '/' ? 'none' : 'flex';
+    }
+}
+
+export function updateFileBrowserSidebar() {
+    const selectedPartition = globalState.getSelectedPartition();
+    const sidebarElem = document.getElementById('file-browser-sidebar');
+    
+    if (!sidebarElem) return;
+    
+    if (!selectedPartition) {
+        sidebarElem.innerHTML = '<li><span class="text-gray-500 text-sm">Selecione uma partição</span></li>';
+        return;
+    }
+    
+    // Get all directories in the partition
+    const allDirectories = globalState.getDirectoriesInPartition(selectedPartition.id);
+    const currentPath = globalState.getCurrentPath();
+    
+    // Build directory tree structure
+    const tree = buildDirectoryTree(allDirectories);
+    
+    // Render the tree
+    sidebarElem.innerHTML = '';
+    
+    // Add root entry
+    const rootLi = document.createElement('li');
+    const isRootActive = currentPath === '/';
+    rootLi.innerHTML = `
+        <a class="${isRootActive ? 'active' : ''}" onclick="navigateToPath('/')" style="cursor: pointer;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            ${selectedPartition.name}
+        </a>
+    `;
+    sidebarElem.appendChild(rootLi);
+    
+    // Add directories if any exist
+    if (tree.children.length > 0) {
+        const treeUl = document.createElement('ul');
+        renderDirectoryTreeRecursive(tree.children, treeUl, currentPath);
+        rootLi.appendChild(treeUl);
+    }
+}
+
+function buildDirectoryTree(directories) {
+    const tree = { path: '/', children: [] };
+    const pathMap = { '/': tree };
+    
+    // Sort directories by path depth to ensure parents are processed first
+    const sortedDirs = directories.sort((a, b) => a.parentPath.split('/').length - b.parentPath.split('/').length);
+    
+    sortedDirs.forEach(dir => {
+        const parentNode = pathMap[dir.parentPath] || tree;
+        const dirNode = {
+            name: dir.name,
+            path: dir.fullPath,
+            children: []
+        };
+        
+        parentNode.children.push(dirNode);
+        pathMap[dir.fullPath] = dirNode;
+    });
+    
+    return tree;
+}
+
+function renderDirectoryTreeRecursive(nodes, parentUl, currentPath) {
+    nodes.forEach(node => {
+        const li = document.createElement('li');
+        const isActive = currentPath === node.path;
+        
+        if (node.children.length > 0) {
+            // Directory with children - create collapsible
+            const isExpanded = currentPath.startsWith(node.path);
+            li.innerHTML = `
+                <details ${isExpanded ? 'open' : ''}>
+                    <summary class="${isActive ? 'active' : ''}" onclick="navigateToPath('${node.path}')" style="cursor: pointer;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2l5 0 2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                        ${node.name}
+                    </summary>
+                </details>
+            `;
+            
+            const nestedUl = document.createElement('ul');
+            renderDirectoryTreeRecursive(node.children, nestedUl, currentPath);
+            li.querySelector('details').appendChild(nestedUl);
+        } else {
+            // Directory without children
+            li.innerHTML = `
+                <a class="${isActive ? 'active' : ''}" onclick="navigateToPath('${node.path}')" style="cursor: pointer;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2l5 0 2 3h9a2 2 0 0 1 2 2v2"></path></svg>
+                    ${node.name}
+                </a>
+            `;
+        }
+        
+        parentUl.appendChild(li);
+    });
+}
+
+// Expose functions globally for onclick handlers
+window.updateFilesList = updateBrowser;
+window.updatePathDisplay = updatePathDisplay;
+window.navigateToParent = function() {
+    globalState.navigateToParent();
+    updateBrowser();
+    updatePathDisplay();
+    updateFileBrowserSidebar();
+};
+window.navigateToPath = function(path) {
+    globalState.setCurrentPath(path);
+    updateBrowser();
+    updatePathDisplay();
+    updateFileBrowserSidebar();
+};

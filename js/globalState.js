@@ -9,10 +9,12 @@ class GlobalState {
         this.disk = {
             blocks: [],
             partitions: [],
-            files: []
+            files: [],
+            directories: []
         };
         
         this.selectedPartition = null;
+        this.currentPath = '/';
     }
 
     // Disk configuration methods
@@ -40,8 +42,60 @@ class GlobalState {
         return this.disk.files.filter(file => file.partitionId === partitionId);
     }
 
+    getFilesInDirectory(partitionId, directoryPath) {
+        return this.disk.files.filter(file => 
+            file.partitionId === partitionId && file.directoryPath === directoryPath
+        );
+    }
+
     addFile(file) {
         this.disk.files.push(file);
+    }
+
+    // Directory methods
+    getDirectoriesInPartition(partitionId) {
+        return this.disk.directories.filter(dir => dir.partitionId === partitionId);
+    }
+
+    getDirectoriesInPath(partitionId, directoryPath) {
+        return this.disk.directories.filter(dir => {
+            return dir.partitionId == partitionId && dir.parentPath === directoryPath;
+        });
+    }
+
+    addDirectory(directory) {
+        this.disk.directories.push(directory);
+    }
+
+    removeDirectory(directoryId) {
+        const dirIndex = this.disk.directories.findIndex(dir => dir.id == directoryId);
+        if (dirIndex !== -1) {
+            const removedDir = this.disk.directories.splice(dirIndex, 1)[0];
+            return removedDir;
+        }
+        return null;
+    }
+
+    // Path navigation methods
+    getCurrentPath() {
+        return this.currentPath;
+    }
+
+    setCurrentPath(path) {
+        this.currentPath = path;
+    }
+
+    navigateToDirectory(directoryName) {
+        const currentPath = this.currentPath;
+        const newPath = currentPath === '/' ? `/${directoryName}` : `${currentPath}/${directoryName}`;
+        this.currentPath = newPath;
+    }
+
+    navigateToParent() {
+        if (this.currentPath === '/') return;
+        const pathParts = this.currentPath.split('/').filter(part => part !== '');
+        pathParts.pop();
+        this.currentPath = pathParts.length === 0 ? '/' : '/' + pathParts.join('/');
     }
 
     removeFile(fileId) {
@@ -62,6 +116,8 @@ class GlobalState {
         const partitions = this.disk.partitions || [];
         const partition = partitions.find(p => p.id == partitionId);
         this.selectedPartition = partition || null;
+        // Reset current path when changing partitions
+        this.currentPath = '/';
     }
 
     getSelectedPartition() {
@@ -78,9 +134,11 @@ class GlobalState {
         this.disk = {
             blocks: [],
             partitions: [],
-            files: []
+            files: [],
+            directories: []
         };
         this.selectedPartition = null;
+        this.currentPath = '/';
     }
 }
 
