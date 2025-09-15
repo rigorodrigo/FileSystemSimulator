@@ -22,7 +22,7 @@ O sistema de arquivos é uma implementação em recurso de  software feita pelo 
 
 ## Como executar
 
-Para usar o simulador, basta acessar o link [SimuladorSistemaDeArquivos](https://filesystemsimulator.pages.dev/). Ao entrar no site, você se deparará com uma tela mais ou menos assim:
+Para usar o simulador, basta acessar o link [Simulador Sistema De Arquivos](https://filesystemsimulator.pages.dev/). Ao entrar no site, você se deparará com uma tela mais ou menos assim:
 
 ![alt text](image.png)
 
