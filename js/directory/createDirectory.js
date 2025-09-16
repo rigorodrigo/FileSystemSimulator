@@ -74,11 +74,20 @@ function allocateDirectoryBlocks(directory, partition) {
         case 'Indexada':
             allocationResult = allocateIndexed(partition, 1);
             if (allocationResult) {
-                directory.blockAllocated = allocationResult[0];
-                // Mark block as directory
-                updateBlockStatus(allocationResult[0], 'directory', {
+                // For indexed allocation, allocateIndexed returns { indexBlock, fileBlocks }
+                // For directories, we use the indexBlock as the directory block
+                directory.blockAllocated = allocationResult.indexBlock;
+                // Mark the index block as directory
+                updateBlockStatus(allocationResult.indexBlock, 'directory', {
                     partitionId: partition.id,
                     partitionName: partition.name
+                });
+                // Also mark the data blocks as directory (not 'used') since they belong to the directory
+                allocationResult.fileBlocks.forEach(blockIndex => {
+                    updateBlockStatus(blockIndex, 'directory', {
+                        partitionId: partition.id,
+                        partitionName: partition.name
+                    });
                 });
             }
             break;

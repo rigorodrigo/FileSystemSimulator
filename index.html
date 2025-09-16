@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script type="module" src="js/index.js"></script>
+    <script type="module" src="js/blockVisualization.js"></script>
     <script type="module" src="js/modals/edit_blocks.js"></script>
     <script type="module" src="js/modals/create_partition.js"></script>
     <script type="module" src="js/modals/file_handler.js"></script>
@@ -186,7 +187,7 @@
                         <!-- Área principal (path + conteúdo) -->
                         <div class="flex-1 flex flex-col gap-2 p-2 pl-0">
                             <!-- Header com path e opções -->
-                            <div class="flex justify-between items-center">
+                            <div class="flex justify-between items-center space-x-2">
                                 <div class="flex items-center gap-2 flex-1">
                                     <button id="back-to-parent" class="btn btn-sm btn-ghost" onclick="navigateToParent()" style="display: none;">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
