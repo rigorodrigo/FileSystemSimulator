@@ -160,7 +160,28 @@ class BlockVisualization {
                     return { type: 'used', partition, file };
                     
                 case 'directory':
-                    const directory = directories.find(d => d.blockAllocated === blockIndex);
+                    // First check if this is the main directory block
+                    let directory = directories.find(d => d.blockAllocated === blockIndex);
+                    
+                    // If not found, check if this is a data block of an indexed directory
+                    if (!directory) {
+                        directory = directories.find(d => {
+                            const dirPartition = partitions.find(p => p.id == d.partitionId);
+                            if (dirPartition && dirPartition.allocationMethod === 'Indexada') {
+                                const indexBlock = blocks[d.blockAllocated];
+                                if (indexBlock && indexBlock.dataset.indexedBlocks) {
+                                    try {
+                                        const indexedBlocks = JSON.parse(indexBlock.dataset.indexedBlocks);
+                                        return indexedBlocks.includes(blockIndex);
+                                    } catch (e) {
+                                        return false;
+                                    }
+                                }
+                            }
+                            return false;
+                        });
+                    }
+                    
                     const dirPartition = partitions.find(p => p.id == blockData.dataset.partitionId);
                     return { type: 'directory', partition: dirPartition, directory, file: null };
                     
@@ -195,13 +216,32 @@ class BlockVisualization {
     highlightDirectoryBlocks(directory) {
         if (!directory) return;
 
-        // Highlight the directory block itself
+        // Highlight the directory block itself (index block for indexed allocation)
         if (directory.blockAllocated !== null) {
             this.highlightBlock(directory.blockAllocated, HIGHLIGHT_CLASSES.directory);
         }
 
-        // Get all files and subdirectories in this directory
+        // For indexed directories, also highlight the data blocks
         const disk = globalState.getDisk();
+        const partitions = disk.partitions || [];
+        const dirPartition = partitions.find(p => p.id === directory.partitionId);
+        
+        if (dirPartition && dirPartition.allocationMethod === 'Indexada' && directory.blockAllocated !== null) {
+            const blocks = disk.blocks || [];
+            const indexBlock = blocks[directory.blockAllocated];
+            if (indexBlock && indexBlock.dataset.indexedBlocks) {
+                try {
+                    const indexedBlocks = JSON.parse(indexBlock.dataset.indexedBlocks);
+                    indexedBlocks.forEach(blockIndex => {
+                        this.highlightBlock(blockIndex, HIGHLIGHT_CLASSES.directory);
+                    });
+                } catch (e) {
+                    console.warn('Failed to parse indexed blocks for directory:', e);
+                }
+            }
+        }
+
+        // Get all files and subdirectories in this directory
         const directoryPath = directory.fullPath;
         
         // Find files in this directory
@@ -227,6 +267,22 @@ class BlockVisualization {
         subdirectories.forEach(subdir => {
             if (subdir.blockAllocated !== null) {
                 this.highlightBlock(subdir.blockAllocated, HIGHLIGHT_CLASSES.directoryChildren);
+                
+                // For indexed subdirectories, also highlight their data blocks
+                if (dirPartition && dirPartition.allocationMethod === 'Indexada') {
+                    const blocks = disk.blocks || [];
+                    const indexBlock = blocks[subdir.blockAllocated];
+                    if (indexBlock && indexBlock.dataset.indexedBlocks) {
+                        try {
+                            const indexedBlocks = JSON.parse(indexBlock.dataset.indexedBlocks);
+                            indexedBlocks.forEach(blockIndex => {
+                                this.highlightBlock(blockIndex, HIGHLIGHT_CLASSES.directoryChildren);
+                            });
+                        } catch (e) {
+                            console.warn('Failed to parse indexed blocks for subdirectory:', e);
+                        }
+                    }
+                }
             }
         });
     }

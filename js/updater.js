@@ -328,12 +328,66 @@ function getBlockStatus(blockIndex) {
         
         switch (status) {
             case 'used':
+                // First check if this is a file block
                 const file = files.find(f => f.allocatedBlocks && f.allocatedBlocks.includes(blockIndex));
+                if (file) {
+                    const partition = partitions.find(p => p.id == blockData.dataset.partitionId);
+                    return { type: 'used', partition, file };
+                }
+                
+                // If not a file, check if it's part of a directory (for indexed allocation)
+                const relatedDirectory = directories.find(d => {
+                    // Check if this is the main directory block
+                    if (d.blockAllocated === blockIndex) return true;
+                    
+                    // For indexed directories, check if this is one of the data blocks
+                    const dirPartition = partitions.find(p => p.id == d.partitionId);
+                    if (dirPartition && dirPartition.allocationMethod === 'Indexada') {
+                        const indexBlock = blocks[d.blockAllocated];
+                        if (indexBlock && indexBlock.dataset.indexedBlocks) {
+                            try {
+                                const indexedBlocks = JSON.parse(indexBlock.dataset.indexedBlocks);
+                                return indexedBlocks.includes(blockIndex);
+                            } catch (e) {
+                                return false;
+                            }
+                        }
+                    }
+                    return false;
+                });
+                
+                if (relatedDirectory) {
+                    const dirPartition = partitions.find(p => p.id == blockData.dataset.partitionId);
+                    return { type: 'directory', partition: dirPartition, directory: relatedDirectory, file: null };
+                }
+                
+                // If neither file nor directory, return as used
                 const partition = partitions.find(p => p.id == blockData.dataset.partitionId);
-                return { type: 'used', partition, file };
+                return { type: 'used', partition, file: null };
                 
             case 'directory':
-                const directory = directories.find(d => d.blockAllocated === blockIndex);
+                // First check if this is the main directory block
+                let directory = directories.find(d => d.blockAllocated === blockIndex);
+                
+                // If not found, check if this is a data block of an indexed directory
+                if (!directory) {
+                    directory = directories.find(d => {
+                        const dirPartition = partitions.find(p => p.id == d.partitionId);
+                        if (dirPartition && dirPartition.allocationMethod === 'Indexada') {
+                            const indexBlock = blocks[d.blockAllocated];
+                            if (indexBlock && indexBlock.dataset.indexedBlocks) {
+                                try {
+                                    const indexedBlocks = JSON.parse(indexBlock.dataset.indexedBlocks);
+                                    return indexedBlocks.includes(blockIndex);
+                                } catch (e) {
+                                    return false;
+                                }
+                            }
+                        }
+                        return false;
+                    });
+                }
+                
                 const dirPartition = partitions.find(p => p.id == blockData.dataset.partitionId);
                 return { type: 'directory', partition: dirPartition, directory, file: null };
                 
