@@ -1,4 +1,5 @@
 ## Bugs
+- Método de diretórios não está ipedindo a criação fora dos limites
 
 ### Visualização
 - Arquivos não estão em uma visualização decente
