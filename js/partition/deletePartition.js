@@ -38,6 +38,18 @@ window.confirmDeletePartition = function() {
         
         const partition = partitions[partitionIndex];
         
+        // Remove all files in this partition
+        const filesInPartition = globalState.getFilesInPartition(partitionToDelete);
+        filesInPartition.forEach(file => {
+            globalState.removeFile(file.id);
+        });
+        
+        // Remove all directories in this partition
+        const directoriesInPartition = globalState.getDirectoriesInPartition(partitionToDelete);
+        directoriesInPartition.forEach(directory => {
+            globalState.removeDirectory(directory.id);
+        });
+        
         for (let i = partition.startBlock; i <= partition.endBlock; i++) {
             updateBlockStatus(i, 'unallocated', {
                 partitionId: null,
