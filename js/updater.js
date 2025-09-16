@@ -410,6 +410,20 @@ function formatBlockRange(blocks) {
         return blocks.join(', ');
     }
     
+    // For very long lists, show formatted with line breaks
+    if (blocks.length > 15) {
+        const blocksPerLine = 8;
+        let result = '';
+        for (let i = 0; i < Math.min(blocksPerLine, blocks.length); i++) {
+            result += blocks[i];
+            if (i < Math.min(blocksPerLine - 1, blocks.length - 1)) result += ', ';
+        }
+        if (blocks.length > blocksPerLine) {
+            result += '<br>...mais ' + (blocks.length - blocksPerLine) + ' blocos';
+        }
+        return result;
+    }
+    
     return `${blocks[0]}, ${blocks[1]}, ..., ${blocks[blocks.length - 2]}, ${blocks[blocks.length - 1]}`;
 }
 
@@ -634,7 +648,19 @@ function getBlockTooltip(blockIndex) {
                         if (blockIndex === status.file.allocationInfo.indexBlock) {
                             tooltip += `<div class="text-xs text-purple-300">Bloco de Índice</div>`;
                             if (status.file.allocationInfo.fileBlocks) {
-                                tooltip += `<div class="text-xs text-purple-300">Ponteiros: ${status.file.allocationInfo.fileBlocks.join(', ')}</div>`;
+                                const blocks = status.file.allocationInfo.fileBlocks;
+                                const blocksPerLine = 8; // Show 8 blocks per line
+                                let formattedBlocks = '';
+                                
+                                for (let i = 0; i < blocks.length; i += blocksPerLine) {
+                                    const lineBlocks = blocks.slice(i, i + blocksPerLine);
+                                    formattedBlocks += lineBlocks.join(', ');
+                                    if (i + blocksPerLine < blocks.length) {
+                                        formattedBlocks += '<br>';
+                                    }
+                                }
+                                
+                                tooltip += `<div class="text-xs text-purple-300">Ponteiros: ${formattedBlocks}</div>`;
                             }
                         } else if (status.file.allocationInfo.fileBlocks) {
                             const dataIndex = status.file.allocationInfo.fileBlocks.indexOf(blockIndex);
