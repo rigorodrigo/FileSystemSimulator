@@ -330,12 +330,315 @@
     <!-- Modal ajuda geral -->
 
     <dialog id="help" class="modal">
-        <div class="modal-box">
+        <div class="modal-box max-w-5xl">
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
-            <h3 class="text-lg font-bold">Hello!</h3>
-            <p class="py-4">Press ESC key or click outside to close</p>
+            <h3 class="text-lg font-bold mb-4">Como Usar o Simulador de Sistema de Arquivos</h3>
+            
+            <div class="space-y-6">
+                <!-- Introdução -->
+                <div class="alert alert-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Este simulador permite explorar conceitos fundamentais de sistemas de arquivos de forma interativa e visual.</span>
+                </div>
+
+                <!-- Primeiros Passos -->
+                <div class="card bg-primary/10 border border-primary/20">
+                    <div class="card-body">
+                        <h4 class="card-title text-primary">Primeiros Passos</h4>
+                        <div class="space-y-3">
+                            <p><strong>1. Configuração Inicial:</strong> Na primeira vez que você abrir o simulador, um modal de configuração aparecerá automaticamente.</p>
+                            <div class="pl-4 space-y-2">
+                                <p>• <strong>Configuração do Disco:</strong> Defina a quantidade de blocos (128-1024 recomendado) e o tamanho de cada bloco (4-64KB)</p>
+                                <p>• <strong>Partição Inicial:</strong> Configure nome, método de alocação, estrutura de diretórios e gerenciamento de espaço livre</p>
+                            </div>
+                            <p><strong>2. Inicialização:</strong> Clique em "Inicializar Sistema" para começar a usar o simulador.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interface Principal -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Interface Principal</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-semibold text-info mb-2">Estatísticas (Topo)</h5>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li><strong>Blocos:</strong> Mostra uso total e permite alteração da configuração</li>
+                                    <li><strong>Disco:</strong> Exibe tamanho total e porcentagem de uso</li>
+                                    <li><strong>Fragmentação:</strong> Indica desperdício de espaço interno</li>
+                                    <li><strong>Arquivos/Diretórios:</strong> Contadores em tempo real</li>
+                                </ul>
+                                <div class="mt-2 p-2 bg-info/10 rounded">
+                                    <span class="text-sm"><strong>Dica:</strong> Clique nos ícones de informação (ⓘ) para detalhes sobre cada estatística.</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-success mb-2">Visualização do Disco</h5>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li><strong>Blocos Coloridos:</strong> Representação visual de cada bloco</li>
+                                    <li><strong>Legenda de Cores:</strong> Cinza=Não alocado, Verde=Livre, Azul=Usado, Amarelo=Diretório</li>
+                                    <li><strong>Gerenciamento de Espaço:</strong> Visualização do método escolhido (bitmap/lista)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trabalhando com Partições -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Trabalhando com Partições</h4>
+                        <div class="space-y-3">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-warning">Criando Partições</h5>
+                                    <ol class="list-decimal list-inside text-sm space-y-1">
+                                        <li>Clique no botão "+" ao lado de "Partições"</li>
+                                        <li>Preencha nome e configurações da partição</li>
+                                        <li>Escolha método de alocação, estrutura de diretórios e gerenciamento de espaço</li>
+                                        <li>Clique em "Criar Partição"</li>
+                                    </ol>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-error">Gerenciando Partições</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li><strong>Seleção:</strong> Clique em uma partição para selecioná-la</li>
+                                        <li><strong>Informações:</strong> Veja estatísticas de uso e configurações</li>
+                                        <li><strong>Exclusão:</strong> Use o botão "🗑️" para excluir partições</li>
+                                        <li><strong>Visualização:</strong> Observe os blocos destacados no disco</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trabalhando com Arquivos -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Trabalhando com Arquivos e Diretórios</h4>
+                        <div class="space-y-4">
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-primary">Navegação</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li><strong>Sidebar:</strong> Use a navegação lateral para acessar diretórios</li>
+                                        <li><strong>Breadcrumb:</strong> Veja o caminho atual na barra de endereço</li>
+                                        <li><strong>Voltar:</strong> Use a seta ← para retornar ao diretório pai</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-success">Criação</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li><strong>Menu "+":</strong> Clique no menu suspenso "+" para opções</li>
+                                        <li><strong>Criar Arquivo:</strong> Defina nome e tamanho em KB</li>
+                                        <li><strong>Criar Diretório:</strong> Especifique apenas o nome</li>
+                                        <li><strong>Exclusão:</strong> Use o ícone 🗑️ ao lado dos itens</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-warning">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.996-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path></svg>
+                                <span><strong>Importante:</strong> Primeiro selecione uma partição para poder criar e gerenciar arquivos!</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Métodos de Alocação -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Métodos de Alocação</h4>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="card bg-success/10 border border-success/20">
+                                <div class="card-body p-3">
+                                    <h5 class="font-semibold text-success">Contígua</h5>
+                                    <p class="text-sm">Arquivos em blocos consecutivos. Acesso rápido, mas pode causar fragmentação externa.</p>
+                                    <div class="badge badge-success badge-sm mt-2">Ideal para: Arquivos que crescem pouco</div>
+                                </div>
+                            </div>
+                            <div class="card bg-warning/10 border border-warning/20">
+                                <div class="card-body p-3">
+                                    <h5 class="font-semibold text-warning">Encadeada</h5>
+                                    <p class="text-sm">Blocos conectados por ponteiros. Elimina fragmentação externa, mas acesso sequencial.</p>
+                                    <div class="badge badge-warning badge-sm mt-2">Ideal para: Arquivos sequenciais</div>
+                                </div>
+                            </div>
+                            <div class="card bg-info/10 border border-info/20">
+                                <div class="card-body p-3">
+                                    <h5 class="font-semibold text-info">Indexada</h5>
+                                    <p class="text-sm">Bloco índice aponta para blocos de dados. Equilibra acesso aleatório e sequencial.</p>
+                                    <div class="badge badge-info badge-sm mt-2">Ideal para: Uso geral</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gerenciamento de Espaço -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Gerenciamento de Espaço Livre</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="card bg-primary/10 border border-primary/20">
+                                <div class="card-body p-3">
+                                    <h5 class="font-semibold text-primary">Mapa de Bits (Bitmap)</h5>
+                                    <p class="text-sm mb-2">Cada bloco representado por 1 bit. 0=livre, 1=ocupado.</p>
+                                    <div class="space-y-1 text-xs">
+                                        <div><strong>Vantagens:</strong> Uso mínimo de memória, operações rápidas</div>
+                                        <div><strong>Desvantagens:</strong> Busca linear pode ser lenta</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card bg-secondary/10 border border-secondary/20">
+                                <div class="card-body p-3">
+                                    <h5 class="font-semibold text-secondary">Lista de Blocos Livres</h5>
+                                    <p class="text-sm mb-2">Lista contendo números de todos os blocos livres.</p>
+                                    <div class="space-y-1 text-xs">
+                                        <div><strong>Vantagens:</strong> Alocação O(1) muito rápida</div>
+                                        <div><strong>Desvantagens:</strong> Uso variável de memória</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dicas e Truques -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Dicas e Truques</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-semibold text-accent">Experimentação</h5>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li>Teste diferentes tamanhos de bloco para ver o impacto na fragmentação</li>
+                                    <li>Compare métodos de alocação criando arquivos de tamanhos variados</li>
+                                    <li>Observe como diferentes métodos afetam o uso de espaço</li>
+                                    <li>Use a visualização em tempo real para entender os conceitos</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-accent">Aprendizagem</h5>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li>Clique nos ícones (ⓘ) para informações detalhadas</li>
+                                    <li>Experimente cenários extremos (arquivos muito pequenos/grandes)</li>
+                                    <li>Compare diferentes configurações de partições</li>
+                                    <li>Observe a fragmentação interna em tempo real</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Solução de Problemas -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Solução de Problemas Comuns</h4>
+                        <div class="space-y-3">
+                            <div class="alert alert-warning">
+                                <div class="flex-col items-start">
+                                    <div class="font-semibold">❓ "Não consigo criar arquivos"</div>
+                                    <div class="text-sm">→ Certifique-se de ter selecionado uma partição primeiro clicando nela.</div>
+                                </div>
+                            </div>
+                            <div class="alert alert-warning">
+                                <div class="flex-col items-start">
+                                    <div class="font-semibold">❓ "A partição está cheia"</div>
+                                    <div class="text-sm">→ Verifique o espaço disponível na estatística da partição ou crie uma nova partição.</div>
+                                </div>
+                            </div>
+                            <div class="alert alert-warning">
+                                <div class="flex-col items-start">
+                                    <div class="font-semibold">❓ "Quero reiniciar o simulador"</div>
+                                    <div class="text-sm">→ Altere as configurações de blocos para reiniciar todo o sistema.</div>
+                                </div>
+                            </div>
+                            <div class="alert alert-warning">
+                                <div class="flex-col items-start">
+                                    <div class="font-semibold">❓ "Não entendo a fragmentação"</div>
+                                    <div class="text-sm">→ Crie arquivos pequenos em uma partição com blocos grandes e observe a diferença entre espaço alocado e usado.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cenários de Aprendizagem -->
+                <div class="card bg-success/10 border border-success/20">
+                    <div class="card-body">
+                        <h4 class="card-title text-success">Cenários de Aprendizagem Sugeridos</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-semibold">Cenário 1: Fragmentação</h5>
+                                <ol class="list-decimal list-inside text-sm space-y-1">
+                                    <li>Configure blocos de 64KB</li>
+                                    <li>Crie vários arquivos de 1-5KB</li>
+                                    <li>Observe a fragmentação interna</li>
+                                    <li>Compare com blocos de 4KB</li>
+                                </ol>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold">Cenário 2: Métodos de Alocação</h5>
+                                <ol class="list-decimal list-inside text-sm space-y-1">
+                                    <li>Crie 3 partições com métodos diferentes</li>
+                                    <li>Crie arquivos similares em cada uma</li>
+                                    <li>Compare o uso de espaço e organização</li>
+                                    <li>Observe as diferenças visuais</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recursos Educacionais -->
+                <div class="card bg-info/10 border border-info/20">
+                    <div class="card-body">
+                        <h4 class="card-title text-info">Recursos Educacionais</h4>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div>
+                                <h5 class="font-semibold">Visualizações</h5>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li>Blocos coloridos em tempo real</li>
+                                    <li>Método de gerenciamento de espaço</li>
+                                    <li>Estatísticas dinâmicas</li>
+                                    <li>Navegação hierárquica</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold">Informações Detalhadas</h5>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li>Modais explicativos (ⓘ)</li>
+                                    <li>Comparações mundo real vs simulador</li>
+                                    <li>Exemplos práticos</li>
+                                    <li>Fórmulas e cálculos</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold">Experimentação</h5>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li>Múltiplas configurações</li>
+                                    <li>Cenários de teste</li>
+                                    <li>Comparação de métodos</li>
+                                    <li>Análise de performance</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <form method="dialog">
+                    <button class="btn btn-primary">
+                        Entendi! Vamos começar
+                    </button>
+                </form>
+            </div>
         </div>
         <form method="dialog" class="modal-backdrop">
             <button>close</button>
