@@ -1,5 +1,6 @@
 import globalState from '/js/globalState.js';
 import { bitMap, freeBlockList } from '/js/space/freeSpaceManager.js';
+import { reinitializeBlockVisualization } from '/js/blockVisualization.js';
 
 export default function updateAll() {
     updateStats();
@@ -288,6 +289,11 @@ export function updateDiskBlocks() {
             }
         }));
     }
+    
+    // Reinitialize block visualization after blocks are updated
+    setTimeout(() => {
+        reinitializeBlockVisualization();
+    }, 100);
 }
 
 function getBlockClassName(blockIndex) {
