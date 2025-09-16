@@ -3,19 +3,16 @@
 ### Visualização
 - Arquivos não estão em uma visualização decente
 - Seleção da partição não está ocorrendo corretamenta
+- Fazer uma visualização quando ter hover no bloco
+  - Se é diretório, mostrar os filhos
+  - Se é arquivo, mostrar os outros blocos dele
+  - Se é umm bloco indexado de arquivo, mostrar todos eles
 
 ## TODO
-- Estatísticas globais
-  - % de fragmentação interna
 - Links
 - Colocar as informações de uso
   - Stats - Arquivos
   - Stats - Diretõrios
-  - Explicar os diferentes tipos de alocações, diretórios, etc.
-  - Ajuda funcional
-  - Fragmentação internal
-
-### Browser
-- Path
-- Criação de diretórios
-- Navegação na árvore
+- Bloco de diretório não mostra todas as informações
+  - Qual é o diretório
+  - Os filhos dele
