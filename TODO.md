@@ -14,6 +14,3 @@
 - Colocar as informações de uso
   - Stats - Arquivos
   - Stats - Diretõrios
-- Bloco de diretório não mostra todas as informações
-  - Qual é o diretório
-  - Os filhos dele

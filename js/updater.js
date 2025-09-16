@@ -312,6 +312,7 @@ function getBlockStatus(blockIndex) {
     const disk = globalState.getDisk();
     const partitions = disk.partitions || [];
     const files = disk.files || [];
+    const directories = disk.directories || [];
     const blocks = disk.blocks || [];
     
     // If blocks array exists and has dataset info, use it
@@ -324,6 +325,11 @@ function getBlockStatus(blockIndex) {
                 const file = files.find(f => f.allocatedBlocks && f.allocatedBlocks.includes(blockIndex));
                 const partition = partitions.find(p => p.id == blockData.dataset.partitionId);
                 return { type: 'used', partition, file };
+                
+            case 'directory':
+                const directory = directories.find(d => d.blockAllocated === blockIndex);
+                const dirPartition = partitions.find(p => p.id == blockData.dataset.partitionId);
+                return { type: 'directory', partition: dirPartition, directory, file: null };
                 
             case 'free':
                 const freePartition = partitions.find(p => p.id == blockData.dataset.partitionId);
@@ -357,6 +363,7 @@ function getBlockTooltip(blockIndex) {
             tooltip += `<div class="text-blue-300">Usado</div>`;
             if (status.file && status.file.name) {
                 tooltip += `<div class="text-xs">Arquivo: ${status.file.name}</div>`;
+                tooltip += `<div class="text-xs">Caminho: ${status.file.directoryPath || '/'}</div>`;
                 tooltip += `<div class="text-xs">Tamanho: ${status.file.sizeInKB} KB</div>`;
             }
             if (status.partition && status.partition.name) {
@@ -404,6 +411,28 @@ function getBlockTooltip(blockIndex) {
             
         case 'directory':
             tooltip += `<div class="text-yellow-300">Diretório</div>`;
+            if (status.directory && status.directory.name) {
+                tooltip += `<div class="text-xs">Nome: ${status.directory.name}</div>`;
+                tooltip += `<div class="text-xs">Caminho: ${status.directory.fullPath}</div>`;
+                
+                // Show contained files/directories
+                const disk = globalState.getDisk();
+                const currentPath = status.directory.fullPath;
+                const filesInDir = disk.files.filter(f => f.directoryPath === currentPath);
+                const dirsInDir = disk.directories.filter(d => d.parentPath === currentPath);
+                
+                if (filesInDir.length > 0 || dirsInDir.length > 0) {
+                    tooltip += `<div class="text-xs mt-1">Conteúdo:</div>`;
+                    if (dirsInDir.length > 0) {
+                        tooltip += `<div class="text-xs">${dirsInDir.length} diretório(s)</div>`;
+                    }
+                    if (filesInDir.length > 0) {
+                        tooltip += `<div class="text-xs">${filesInDir.length} arquivo(s)</div>`;
+                    }
+                } else {
+                    tooltip += `<div class="text-xs">Diretório vazio</div>`;
+                }
+            }
             if (status.partition && status.partition.name) {
                 tooltip += `<div class="text-xs">Partição: ${status.partition.name}</div>`;
             }

@@ -1,5 +1,6 @@
 import globalState from '/js/globalState.js'
 import { allocateContiguous, allocateLinked, allocateIndexed } from '/js/disk/createAllocationMethod.js';
+import { updateBlockStatus } from '/js/updater.js';
 
 export class Directory {
     constructor(name, partition, parentPath = '/') {
@@ -50,6 +51,11 @@ function allocateDirectoryBlocks(directory, partition) {
             allocationResult = allocateContiguous(partition, 1);
             if (allocationResult) {
                 directory.blockAllocated = allocationResult[0];
+                // Mark block as directory
+                updateBlockStatus(allocationResult[0], 'directory', {
+                    partitionId: partition.id,
+                    partitionName: partition.name
+                });
             }
             break;
 
@@ -57,6 +63,11 @@ function allocateDirectoryBlocks(directory, partition) {
             allocationResult = allocateLinked(partition, 1);
             if (allocationResult) {
                 directory.blockAllocated = allocationResult[0];
+                // Mark block as directory
+                updateBlockStatus(allocationResult[0], 'directory', {
+                    partitionId: partition.id,
+                    partitionName: partition.name
+                });
             }
             break;
 
@@ -64,6 +75,11 @@ function allocateDirectoryBlocks(directory, partition) {
             allocationResult = allocateIndexed(partition, 1);
             if (allocationResult) {
                 directory.blockAllocated = allocationResult[0];
+                // Mark block as directory
+                updateBlockStatus(allocationResult[0], 'directory', {
+                    partitionId: partition.id,
+                    partitionName: partition.name
+                });
             }
             break;
 
@@ -72,7 +88,7 @@ function allocateDirectoryBlocks(directory, partition) {
     }
 
     if (!allocationResult) {
-        throw new Error("Não foi possível alocar espaço para o arquivo!");
+        throw new Error("Não foi possível alocar espaço para o diretório!");
     }
 
     return allocationResult;
