@@ -179,15 +179,22 @@ function createPartitionElement(partition) {
 export function updateBrowser() {
     // Get the current select partatition and all the related files
     const selectedPartition = globalState.getSelectedPartition();
-    if (!selectedPartition) return;
+    
+    // Update file list in the UI
+    const fileListElem = document.getElementById('file-browser-items');
+    if (!fileListElem) return;
+    
+    if (!selectedPartition) {
+        // Clear browser content when no partition is selected
+        fileListElem.innerHTML = '';
+        const emptyState = createNoPartitionSelectedState();
+        fileListElem.appendChild(emptyState);
+        return;
+    }
 
     const currentPath = globalState.getCurrentPath();
     const files = globalState.getFilesInDirectory(selectedPartition.id, currentPath);
     const directories = globalState.getDirectoriesInPath(selectedPartition.id, currentPath);
-
-    // Update file list in the UI
-    const fileListElem = document.getElementById('file-browser-items');
-    if (!fileListElem) return;
     fileListElem.innerHTML = '';
 
     // Create grid container
@@ -353,6 +360,25 @@ function createEmptyState(currentPath) {
         </div>
         <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-2">${message}</h3>
         <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md">${description}</p>
+    `;
+    
+    return emptyDiv;
+}
+
+function createNoPartitionSelectedState() {
+    const emptyDiv = document.createElement('div');
+    emptyDiv.className = 'flex flex-col items-center justify-center py-12 text-center';
+    
+    emptyDiv.innerHTML = `
+        <div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <path d="M21 15l-5-5L5 21"></path>
+            </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-2">Nenhuma partição selecionada</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md">Selecione uma partição para visualizar seus arquivos e diretórios.</p>
     `;
     
     return emptyDiv;
