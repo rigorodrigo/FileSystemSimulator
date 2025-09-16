@@ -26,17 +26,15 @@ Para usar o simulador, basta acessar o link [Simulador Sistema De Arquivos](http
 
 ![alt text](/imgs/image.png)
 
-Nela, você definirá quantos blocos terá o seu disco e qual o tamanho de cada bloco. Por óbvio, o tamanho em Mb do disco será a multiplicação destes dois valores.Obeserve que que há uma recomendação de tamanho de cada disco ser entre 4 e 64 Kb. No exemplo, eu adicionei 64 blocos de 2 Kb , totalizando um pouco mais 120 Kb.
+Nela, você definirá quantos blocos terá o seu disco e qual o tamanho de cada bloco. Por óbvio, o tamanho em Mb do disco será a multiplicação destes dois valores.Observe que que há uma recomendação de quantidade de blocos e tamanho de cada bloco do disco. No exemplo, eu adicionei 128 blocos de 4 Kb , totalizando por volta de 500 kb. Para inicializar um disco, deve-se criar uma partição inicial para ele. Defina o nome que desejar e os métodos de gerenciamento que preferir.
 
-![alt text](/imgs/image-1.png)
+![alt text](/imgs/image1.png)
 
 Disco criado! Agora você pode gerenciar suas partições, diretórios e arquivos. 
 
-![alt text](/imgs/image-2.png)
+![alt text](/imgs/image2.png)
 
-Criando uma partição:
-
-![alt text](/imgs/image-3.png)
+Ao selecionar uma partição específica, o usuário pode verificar o método de gerenciamento de espaço livre da mesma e mais alguns detalhes.
 
 ## Autores
 

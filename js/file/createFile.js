@@ -8,6 +8,7 @@ class File {
         this.name = name;
         this.sizeInKB = parseInt(sizeInKB);
         this.partitionId = partition.id;
+        this.directoryPath = globalState.getCurrentPath();
         this.createdAt = new Date();
         
         // Calculate required blocks
@@ -85,7 +86,7 @@ function allocateFileBlocks(file, partition) {
             }
             break;
             
-        case 'Indexada Combinada':
+        case 'Indexada':
             allocationResult = allocateIndexed(partition, file.requiredBlocks);
             if (allocationResult) {
                 file.allocatedBlocks = [allocationResult.indexBlock, ...allocationResult.fileBlocks];

@@ -52,7 +52,7 @@ function deallocateFileBlocks(file, partition) {
             // TODO
             break;
             
-        case 'Indexada Combinada':
+        case 'Indexada':
             // TODO
             break;
             

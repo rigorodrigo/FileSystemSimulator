@@ -1,35 +1,42 @@
 import globalState from '/js/globalState.js'
+import { allocateContiguous, allocateLinked, allocateIndexed } from '/js/disk/createAllocationMethod.js';
 
 export class Directory {
-    constructor(name, sizeInKB, partition, children, blockAllocated, directoryMethod) {
+    constructor(name, partition, parentPath = '/') {
+        this.id = Date.now() + Math.random();
         this.name = name;
-        this.sizeInKB = sizeInKB;
-        this.partition = partition;
-        this.children = children || [];
-        this.blockAllocated = blockAllocated;
-        this.directoryMethod = directoryMethod;
+        this.partitionId = partition.id;
+        this.parentPath = parentPath;
+        this.fullPath = parentPath === '/' ? `/${name}` : `${parentPath}/${name}`;
+        this.createdAt = new Date();
+        this.blockAllocated = null;
+        
+        // Directory always takes at least 1 block
+        this.sizeInKB = partition.directoryMethod === 'Linear' ? 
+            globalState.getDiskConfig().blockSize : 
+            globalState.getDiskConfig().blockSize;
     }
-
-
 }
 
-function validateDirectoryCreation(name, sizeInKB, partition) {
+function validateDirectoryCreation(name, partition) {
     if (!name || name.trim() === '') {
         throw new Error('Nome do diretório não pode ser vazio!');
-    }
-    if (isNaN(sizeInKB) || sizeInKB < 0) {
-        throw new Error('Tamanho do diretório deve ser válido!');
     }
     if (!partition) {
         throw new Error("Nenhuma partição selecionada!");
     }
 
-    const blockSize = globalState.getDiskConfig().blockSize;
-    const requiredBlocks = Math.ceil(sizeInKB / blockSize);
+    // Check if directory name already exists in current path
+    const currentPath = globalState.getCurrentPath();
+    const existingDirs = globalState.getDirectoriesInPath(partition.id, currentPath);
+    if (existingDirs.some(dir => dir.name === name)) {
+        throw new Error(`Diretório "${name}" já existe neste local!`);
+    }
 
+    // Check if there's at least 1 block available
     const availableBlocks = partition.totalBlocks - partition.usedBlocks;
-    if (requiredBlocks > availableBlocks) {
-        throw new Error(`Espaço insuficiente! Necessário: ${requiredBlocks} blocos, Disponível: ${availableBlocks} blocos`);
+    if (availableBlocks < 1) {
+        throw new Error(`Espaço insuficiente! Necessário: 1 bloco, Disponível: ${availableBlocks} blocos`);
     }
 
     return true;
@@ -53,7 +60,7 @@ function allocateDirectoryBlocks(directory, partition) {
             }
             break;
 
-        case 'Indexada Combinada':
+        case 'Indexada':
             allocationResult = allocateIndexed(partition, 1);
             if (allocationResult) {
                 directory.blockAllocated = allocationResult[0];
@@ -85,11 +92,12 @@ function allocateDirectoryBlocks(directory, partition) {
 }*/
 
 
-export function createDirectory(name, sizeInKB, partition, blockAllocated, directoryMethod) {
-    validateDirectoryCreation(name, sizeInKB, partition);
-    const newDirectory = new Directory(name, sizeInKB, partition, blockAllocated, directoryMethod);
+export function createDirectory(name, partition) {
+    validateDirectoryCreation(name, partition);
+    const currentPath = globalState.getCurrentPath();
+    const newDirectory = new Directory(name, partition, currentPath);
     allocateDirectoryBlocks(newDirectory, partition);
-   partition.usedBlocks +=1;
+    partition.usedBlocks += 1;
     globalState.addDirectory(newDirectory);
 
     return newDirectory;
