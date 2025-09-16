@@ -1246,3 +1246,9 @@ window.navigateToPath = function(path) {
     updatePathDisplay();
     updateFileBrowserSidebar();
 };
+window.closeCreateDropdown = function() {
+    const dropdown = document.getElementById('create-options-dropdown');
+    if (dropdown) {
+        dropdown.removeAttribute('open');
+    }
+};

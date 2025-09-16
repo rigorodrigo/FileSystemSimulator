@@ -198,11 +198,11 @@
                                 </div>
 
                                 <div>
-                                    <details class="dropdown dropdown-left">
+                                    <details class="dropdown dropdown-left" id="create-options-dropdown">
                                     <summary class="btn btn-soft btn-primary text-center align-middle text-bold text-lg md:text-2xl">+</summary>
                                     <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                                        <li><a onclick="create_file.showModal()">Criar Arquivo</a></li>
-                                        <li><a onclick="updateDirectoryCreationModal(); create_directory.showModal()">Criar Diretório</a></li>
+                                        <li><a onclick="closeCreateDropdown(); create_file.showModal()">Criar Arquivo</a></li>
+                                        <li><a onclick="closeCreateDropdown(); updateDirectoryCreationModal(); create_directory.showModal()">Criar Diretório</a></li>
                                     </ul>
                                     </details>
                                 </div>
