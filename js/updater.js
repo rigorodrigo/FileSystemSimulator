@@ -190,50 +190,227 @@ export function updateBrowser() {
     if (!fileListElem) return;
     fileListElem.innerHTML = '';
 
-    // Add directories
+    // Create grid container
+    const gridContainer = document.createElement('div');
+    gridContainer.className = 'flex flex-wrap gap-2';
+
+    // Add directories first
     directories.forEach(directory => {
-        const dirElem = document.createElement('div');
-        dirElem.className = 'border p-2 rounded-lg cursor-pointer hover:bg-warning/15 transition-colors max-w-fit max-h-fit';
-        dirElem.innerHTML = `
-            <div class="flex items-center space-x-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2l5 0 2 3h9a2 2 0 0 1 2 2z"></path></svg>
-                <span class="font-medium">${directory.name}</span>
-            </div>
-        `;
-        dirElem.onclick = () => {
-            globalState.navigateToDirectory(directory.name);
-            updateBrowser();
-            updatePathDisplay();
-            updateFileBrowserSidebar();
-        };
-        fileListElem.appendChild(dirElem);
+        const dirCard = createDirectoryCard(directory);
+        gridContainer.appendChild(dirCard);
     });
 
     // Add files
     files.forEach(file => {
-        const fileElem = document.createElement('div');
-        fileElem.className = 'border p-2 rounded-lg space-y-2 cursor-pointer hover:bg-primary/15 transition-colors max-w-fit max-h-fit';
-        fileElem.dataset.fileId = file.id;
-        fileElem.innerHTML = `
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
-                    <span class="font-medium">${file.name}</span>
-                </div>
-                <button onclick="confirmDeleteFile('${file.id}', '${file.name}')">
-                    <svg class="text-error/30 hover:text-error cursor-pointer transition" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
-                </button>
-            </div>
-            <div class="text-sm text-gray-600">Tamanho: ${(file.sizeInKB)} KB (${file.allocatedBlocks.length} blocos)</div>
-        `;
-        fileListElem.appendChild(fileElem);
+        const fileCard = createFileCard(file, selectedPartition);
+        gridContainer.appendChild(fileCard);
     });
 
-    if (files.length === 0 && directories.length === 0 && currentPath === '/') {
-        fileListElem.innerHTML = '<div class="text-center text-gray-500 py-4">Nenhum arquivo nesta partição</div>';
-    } else if (files.length === 0 && directories.length === 0) {
-        fileListElem.innerHTML = '<div class="text-center text-gray-500 py-4">Diretório vazio</div>';
+    fileListElem.appendChild(gridContainer);
+
+    // Show empty state if no items
+    if (files.length === 0 && directories.length === 0) {
+        const emptyState = createEmptyState(currentPath);
+        fileListElem.innerHTML = '';
+        fileListElem.appendChild(emptyState);
     }
+}
+
+function createDirectoryCard(directory) {
+    const dirCard = document.createElement('div');
+    
+    // Get directory content for tooltip
+    const disk = globalState.getDisk();
+    const currentPath = directory.fullPath;
+    const filesInDir = disk.files.filter(f => f.directoryPath === currentPath);
+    const dirsInDir = disk.directories.filter(d => d.parentPath === currentPath);
+    
+    dirCard.className = 'group bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 rounded-lg p-2 cursor-pointer hover:shadow-md hover:border-yellow-300 transition-all duration-200 relative tooltip';
+    
+    dirCard.innerHTML = `
+        <div class="tooltip-content">
+            <div class="bg-gray-900 text-white text-xs rounded p-3 shadow-lg">
+                <div class="font-bold text-yellow-300">${directory.name}</div>
+                <div class="text-yellow-200 text-xs mt-1">Diretório</div>
+                <div class="text-xs mt-2">Caminho: ${directory.fullPath}</div>
+                <div class="text-xs">Bloco alocado: ${directory.blockAllocated}</div>
+                ${dirsInDir.length > 0 ? `<div class="text-xs">${dirsInDir.length} subdiretório(s)</div>` : ''}
+                ${filesInDir.length > 0 ? `<div class="text-xs">${filesInDir.length} arquivo(s)</div>` : ''}
+                ${dirsInDir.length === 0 && filesInDir.length === 0 ? '<div class="text-xs text-gray-400">Diretório vazio</div>' : ''}
+            </div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <!-- Directory Icon -->
+            <div class="w-10 h-10 bg-yellow-400 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2l5 0 2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+            </div>
+            
+            <!-- Directory Info -->
+            <div class="flex-1 min-w-0">
+                <h3 class="font-medium text-base-content text-sm truncate" title="${directory.name}">
+                    ${directory.name}
+                </h3>
+                <p class="text-xs text-info-content">
+                    Diretório
+                </p>
+            </div>
+            
+            <!-- Arrow icon -->
+            <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 18l6-6-6-6"></path>
+                </svg>
+            </div>
+        </div>
+    `;
+    
+    dirCard.onclick = () => {
+        globalState.navigateToDirectory(directory.name);
+        updateBrowser();
+        updatePathDisplay();
+        updateFileBrowserSidebar();
+    };
+    
+    return dirCard;
+}
+
+function createFileCard(file, partition) {
+    const fileCard = document.createElement('div');
+    const allocationInfo = getAllocationDisplayInfo(file, partition);
+    
+    fileCard.className = 'group bg-blue-50 dark:bg-blue-900/20 border border-blue-200 rounded-lg p-2 cursor-pointer hover:shadow-md hover:border-blue-300 transition-all duration-200 relative tooltip';
+    fileCard.dataset.fileId = file.id;
+    
+    fileCard.innerHTML = `
+        <div class="tooltip-content">
+            <div class="text-white text-xs rounded p-3 shadow-lg">
+                <div class="font-bold text-blue-300">${file.name}</div>
+                <div class="text-blue-200 text-xs mt-1">Arquivo</div>
+                <div class="text-xs mt-2">Caminho: ${file.directoryPath || '/'}</div>
+                <div class="text-xs">Tamanho: ${file.sizeInKB} KB</div>
+                <div class="text-xs">Blocos utilizados: ${file.allocatedBlocks.length}</div>
+                <div class="text-xs mt-1">
+                    <span class="text-gray-400">Blocos:</span>
+                    <span class="font-mono">${formatBlockRange(file.allocatedBlocks)}</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center space-x-3">
+            <!-- File Icon -->
+            <div class="w-10 h-10 bg-blue-400 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+            </div>
+            
+            <!-- File Info -->
+            <div class="flex-1 min-w-0">
+                <h3 class="font-medium text-base-content text-sm truncate" title="${file.name}">
+                    ${file.name}
+                </h3>
+                <div class="text-xs text-info-content">
+                    ${file.sizeInKB} KB
+                </div>
+            </div>
+            
+            <!-- Delete Button -->
+            <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-shrink-0">
+                <button onclick="event.stopPropagation(); confirmDeleteFile('${file.id}', '${file.name}')" 
+                        class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 dark:hover:bg-red-900/30 text-red-500 hover:text-red-600 transition-colors" 
+                        title="Excluir arquivo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    return fileCard;
+}
+
+function createEmptyState(currentPath) {
+    const emptyDiv = document.createElement('div');
+    emptyDiv.className = 'flex flex-col items-center justify-center py-12 text-center';
+    
+    const isRoot = currentPath === '/';
+    const message = isRoot ? 'Nenhum arquivo nesta partição' : 'Diretório vazio';
+    const description = isRoot ? 
+        'Comece criando arquivos ou diretórios usando o botão "+" acima.' :
+        'Este diretório não contém arquivos ou subdiretórios.';
+    
+    emptyDiv.innerHTML = `
+        <div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400">
+                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2l5 0 2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-2">${message}</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md">${description}</p>
+    `;
+    
+    return emptyDiv;
+}
+
+function getAllocationDisplayInfo(file, partition) {
+    if (!file.allocationInfo) {
+        return {
+            method: 'N/A',
+            icon: '',
+            color: 'text-gray-500',
+            details: ''
+        };
+    }
+    
+    switch (file.allocationInfo.type) {
+        case 'contiguous':
+            return {
+                method: 'Contígua',
+                icon: '<div class="w-3 h-3 bg-green-500 rounded"></div>',
+                color: 'text-green-600 dark:text-green-400',
+                details: `Blocos ${file.allocationInfo.startBlock}-${file.allocationInfo.endBlock}`
+            };
+        case 'linked':
+            return {
+                method: 'Encadeada',
+                icon: '<div class="w-3 h-3 bg-blue-500 rounded"></div>',
+                color: 'text-blue-600 dark:text-blue-400',
+                details: `${file.allocationInfo.blocks.length} blocos encadeados`
+            };
+        case 'indexed':
+            return {
+                method: 'Indexada',
+                icon: '<div class="w-3 h-3 bg-purple-500 rounded"></div>',
+                color: 'text-purple-600 dark:text-purple-400',
+                details: `Índice: ${file.allocationInfo.indexBlock}, Dados: ${file.allocationInfo.fileBlocks.length} blocos`
+            };
+        default:
+            return {
+                method: 'Desconhecido',
+                icon: '<div class="w-3 h-3 bg-gray-500 rounded"></div>',
+                color: 'text-gray-500',
+                details: ''
+            };
+    }
+}
+
+function formatBlockRange(blocks) {
+    if (!blocks || blocks.length === 0) return 'Nenhum';
+    if (blocks.length === 1) return `${blocks[0]}`;
+    if (blocks.length <= 3) return blocks.join(', ');
+    
+    // For longer lists, show first few and last few
+    if (blocks.length <= 6) {
+        return blocks.join(', ');
+    }
+    
+    return `${blocks[0]}, ${blocks[1]}, ..., ${blocks[blocks.length - 2]}, ${blocks[blocks.length - 1]}`;
 }
 
 export function updateDiskBlocks() {
