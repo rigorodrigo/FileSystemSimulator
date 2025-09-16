@@ -348,17 +348,166 @@
     <!-- Modals para informações -->
 
     <dialog id="info_blocks" class="modal">
-        <div class="modal-box">
+        <div class="modal-box max-w-3xl">
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
-            <h3 class="text-lg font-bold">O que são blocos?</h3>
-            <p class="py-4">Os blocos são unidades de alocação de espaço em disco. Cada bloco tem um tamanho fixo e é usado para armazenar dados de arquivos e diretórios.</p>
+            <h3 class="text-lg font-bold mb-4">O que são Blocos?</h3>
+            
+            <div class="space-y-4">
+                <div class="alert alert-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Os blocos são as unidades básicas de alocação de espaço em disco. Cada bloco tem um tamanho fixo e é usado para armazenar dados.</span>
+                </div>
 
-            <p>O seu disco atualmente está dividido em 1024 blocos com um tamanho de 4 KiB cada.</p>
-            <p>Na vida real cada partição e cada algortimo de aloção tem o próprio tamanho de bloco, que também pode ser alterado a qualquer momento. Entretanto, para manter a simplicidade, o tamanho de bloco e quantidade de blocos é global para todas as partições.</p>
+                <!-- Configuração Atual -->
+                <div class="card bg-primary/10 border border-primary/20">
+                    <div class="card-body">
+                        <h4 class="card-title text-primary">Configuração Atual do Sistema</h4>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="stat bg-base-200 rounded-lg">
+                                <div class="stat-title">Quantidade de Blocos</div>
+                                <div class="stat-value text-lg" id="modal-blocks-quantity">0</div>
+                                <div class="stat-desc">Total disponível</div>
+                            </div>
+                            <div class="stat bg-base-200 rounded-lg">
+                                <div class="stat-title">Tamanho por Bloco</div>
+                                <div class="stat-value text-lg" id="modal-blocks-size">4 KB</div>
+                                <div class="stat-desc">Tamanho fixo</div>
+                            </div>
+                            <div class="stat bg-base-200 rounded-lg">
+                                <div class="stat-title">Blocos Usados</div>
+                                <div class="stat-value text-lg" id="modal-blocks-used">0</div>
+                                <div class="stat-desc" id="modal-blocks-usage-percent">0% do total</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Progresso visual -->
+                        <div class="mt-4">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Uso dos Blocos</span>
+                                <span id="modal-blocks-progress-text">0%</span>
+                            </div>
+                            <progress class="progress progress-info w-full" id="modal-blocks-progress" value="0" max="100"></progress>
+                        </div>
+                    </div>
+                </div>
 
-            <div class="flex justify-between mt-4">
+                <!-- Explicação -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Como Funcionam os Blocos</h4>
+                        <p class="mb-3">Os blocos são as menores unidades que o sistema operacional pode alocar para arquivos. Quando você cria um arquivo, ele sempre ocupa pelo menos um bloco inteiro, mesmo que seja menor que o tamanho do bloco.</p>
+                        
+                        <div class="mockup-code text-sm mb-4">
+                            <pre><code>
+Exemplo com blocos de 4KB:
+Arquivo de 1KB → Usa 1 bloco (4KB)
+Arquivo de 7KB → Usa 2 blocos (8KB)
+Arquivo de 4KB → Usa 1 bloco (4KB)
+
+Fragmentação interna = Espaço desperdiçado dentro dos blocos</code></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estados dos Blocos -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Estados dos Blocos</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-4 h-4 bg-neutral-content rounded"></span>
+                                    <span class="text-sm"><strong>Não Alocado:</strong> Espaço disponível para criação de novas partições</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-4 h-4 bg-success rounded"></span>
+                                    <span class="text-sm"><strong>Livre:</strong> Pertence a uma partição mas não contém dados</span>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-4 h-4 bg-info rounded"></span>
+                                    <span class="text-sm"><strong>Usado:</strong> Contém dados de arquivos</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-4 h-4 bg-warning rounded"></span>
+                                    <span class="text-sm"><strong>Diretório:</strong> Contém estruturas de diretórios</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparação de Tamanhos -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Impacto do Tamanho do Bloco</h4>
+                        <div class="overflow-x-auto">
+                            <table class="table table-zebra">
+                                <thead>
+                                    <tr>
+                                        <th>Tamanho</th>
+                                        <th>Vantagens</th>
+                                        <th>Desvantagens</th>
+                                        <th>Uso Ideal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge badge-success">1-2 KB</span></td>
+                                        <td>Menos desperdício</td>
+                                        <td>Mais metadados</td>
+                                        <td>Arquivos pequenos</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-info">4-8 KB</span></td>
+                                        <td>Equilibrado</td>
+                                        <td>Padrão</td>
+                                        <td>Uso geral</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-warning">64+ KB</span></td>
+                                        <td>Menos overhead</td>
+                                        <td>Muito desperdício</td>
+                                        <td>Arquivos grandes</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Diferenças do Mundo Real -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Simulador vs. Mundo Real</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-semibold text-info">Neste Simulador:</h5>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li>Tamanho de bloco global para todo o disco</li>
+                                    <li>Quantidade fixa configurada no início</li>
+                                    <li>Visualização simplificada dos estados</li>
+                                    <li>Fragmentação calculada em tempo real</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-success">Na Vida Real:</h5>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li>Cada sistema de arquivos pode ter tamanho diferente</li>
+                                    <li>Pode ser alterado durante a formatação</li>
+                                    <li>Setores defeituosos podem existir</li>
+                                    <li>Sistemas mais complexos de cache e otimização</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-between mt-6">
                 <form method="dialog">
                     <button class="btn btn-soft btn-ghost">
                         Fechar
@@ -366,7 +515,7 @@
                 </form>
                 <form method="dialog">
                     <button onclick="edit_blocks.showModal()" class="btn btn-soft btn-success">
-                        Alterar configurações
+                        Alterar Configurações
                     </button>
                 </form>
             </div>
@@ -377,13 +526,199 @@
     </dialog>
 
     <dialog id="info_disk" class="modal">
-        <div class="modal-box">
+        <div class="modal-box max-w-4xl">
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
-            <h3 class="text-lg font-bold">Informações sobre o disco!</h3>
-            <p class="py-4">O disco é o local físico onde seus arquivos e informações são guardadas.</p>
-            <p>Neste simulador, o tamanho do disco é calculado pelo tamanho dos blocos e a quantidade de blocos, entretanto, na vida real isso não é verdade, os discos vem com um tamanho físico de fábrica, não dependente do tamanho do bloco.</p>
+            <h3 class="text-lg font-bold mb-4">Informações do Disco</h3>
+            
+            <div class="space-y-4">
+                <div class="alert alert-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>O disco é o dispositivo de armazenamento físico onde todos os dados do sistema são guardados.</span>
+                </div>
+
+                <!-- Estado Atual do Disco -->
+                <div class="card bg-primary/10 border border-primary/20">
+                    <div class="card-body">
+                        <h4 class="card-title text-primary">Estado Atual do Disco</h4>
+                        <div class="grid md:grid-cols-4 gap-4">
+                            <div class="stat bg-base-200 rounded-lg">
+                                <div class="stat-title">Tamanho Total</div>
+                                <div class="stat-value text-lg" id="modal-disk-size">0 KB</div>
+                                <div class="stat-desc">Capacidade máxima</div>
+                            </div>
+                            <div class="stat bg-base-200 rounded-lg">
+                                <div class="stat-title">Espaço Usado</div>
+                                <div class="stat-value text-lg" id="modal-disk-used">0 KB</div>
+                                <div class="stat-desc" id="modal-disk-usage-percent">0% utilizado</div>
+                            </div>
+                            <div class="stat bg-base-200 rounded-lg">
+                                <div class="stat-title">Quantidade de Blocos</div>
+                                <div class="stat-value text-lg" id="modal-total-blocks">0</div>
+                                <div class="stat-desc">Unidades de alocação</div>
+                            </div>
+                            <div class="stat bg-base-200 rounded-lg">
+                                <div class="stat-title">Tamanho do Bloco</div>
+                                <div class="stat-value text-lg" id="modal-block-size-disk">4 KB</div>
+                                <div class="stat-desc">Unidade mínima</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Progresso visual -->
+                        <div class="mt-4">
+                            <div class="flex justify-between text-sm mb-1">
+                                <span>Uso do Disco</span>
+                                <span id="modal-disk-progress-text">0%</span>
+                            </div>
+                            <progress class="progress progress-primary w-full" id="modal-disk-progress" value="0" max="100"></progress>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Configuração e Organização -->
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="card bg-base-200">
+                        <div class="card-body">
+                            <h4 class="card-title">Organização do Disco</h4>
+                            <p class="mb-3">O disco é dividido em blocos de tamanho fixo. Cada bloco pode armazenar dados de arquivos ou metadados do sistema.</p>
+                            
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-4 h-4 bg-neutral-content rounded"></span>
+                                    <span class="text-sm">Não Alocado - Espaço disponível para novas partições</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-4 h-4 bg-success rounded"></span>
+                                    <span class="text-sm">Livre - Espaço alocado mas não usado</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-4 h-4 bg-info rounded"></span>
+                                    <span class="text-sm">Usado - Contém dados de arquivos</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-4 h-4 bg-warning rounded"></span>
+                                    <span class="text-sm">Diretório - Contém estruturas de diretórios</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card bg-base-200">
+                        <div class="card-body">
+                            <h4 class="card-title">Partições</h4>
+                            <p class="mb-3">O disco pode ser dividido em partições lógicas, cada uma com seu próprio sistema de arquivos.</p>
+                            
+                            <div class="space-y-2" id="modal-partitions-list">
+                                <div class="text-gray-500 text-sm">Carregando informações das partições...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Características Técnicas -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Características Técnicas</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-semibold mb-2">Neste Simulador:</h5>
+                                <ul class="list-disc list-inside space-y-1 text-sm">
+                                    <li>Tamanho calculado como: Blocos × Tamanho do Bloco</li>
+                                    <li>Blocos de tamanho fixo e uniforme</li>
+                                    <li>Configuração global para todas as partições</li>
+                                    <li>Visualização em tempo real do uso</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold mb-2">Na Vida Real:</h5>
+                                <ul class="list-disc list-inside space-y-1 text-sm">
+                                    <li>Tamanho físico definido pelo fabricante</li>
+                                    <li>Setores de 512 bytes ou 4KB</li>
+                                    <li>Podem ter setores defeituosos</li>
+                                    <li>Diferentes tecnologias (HDD, SSD, NVMe)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Performance e Otimização -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Performance e Otimização</h4>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div>
+                                <h5 class="font-semibold text-success">Tamanhos de Bloco Pequenos</h5>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li>Menos fragmentação interna</li>
+                                    <li>Melhor para arquivos pequenos</li>
+                                    <li>Mais overhead de metadados</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-warning">Tamanhos de Bloco Médios</h5>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li>Equilibrio entre fragmentação e overhead</li>
+                                    <li>Padrão para a maioria dos sistemas</li>
+                                    <li>Geralmente 4KB</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold text-error">Tamanhos de Bloco Grandes</h5>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li>Melhor para arquivos grandes</li>
+                                    <li>Menor overhead de metadados</li>
+                                    <li>Maior fragmentação interna</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparação de Tecnologias -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Tipos de Disco (Mundo Real)</h4>
+                        <div class="overflow-x-auto">
+                            <table class="table table-zebra">
+                                <thead>
+                                    <tr>
+                                        <th>Tipo</th>
+                                        <th>Velocidade</th>
+                                        <th>Capacidade</th>
+                                        <th>Durabilidade</th>
+                                        <th>Custo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge badge-info">HDD</span></td>
+                                        <td>100-200 MB/s</td>
+                                        <td>Até 20TB+</td>
+                                        <td>3-5 anos</td>
+                                        <td><span class="badge badge-success">Baixo</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-warning">SSD SATA</span></td>
+                                        <td>500-600 MB/s</td>
+                                        <td>Até 8TB</td>
+                                        <td>5-10 anos</td>
+                                        <td><span class="badge badge-warning">Médio</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-error">NVMe SSD</span></td>
+                                        <td>3000+ MB/s</td>
+                                        <td>Até 8TB</td>
+                                        <td>5-10 anos</td>
+                                        <td><span class="badge badge-error">Alto</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <form method="dialog" class="modal-backdrop">
             <button>close</button>
@@ -436,6 +771,161 @@
                         <p>Quando um arquivo não preenche completamente seus blocos alocados, ocorre fragmentação interna. Por exemplo, um arquivo de 3KB em blocos de 4KB desperdiça 1KB.</p>
                         <div class="mt-2">
                             <span class="badge badge-warning">Fragmentação = Espaço Alocado - Tamanho Real do Arquivo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <dialog id="info_internal_fragmentation" class="modal">
+        <div class="modal-box max-w-4xl">
+            <form method="dialog">
+                <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+            </form>
+            <h3 class="text-lg font-bold mb-4">Fragmentação Interna</h3>
+            
+            <div class="space-y-4">
+                <div class="alert alert-warning">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.996-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path></svg>
+                    <span>A fragmentação interna ocorre quando um arquivo não utiliza completamente os blocos que lhe foram alocados.</span>
+                </div>
+
+                <!-- Estado Atual -->
+                <div class="card bg-primary/10 border border-primary/20">
+                    <div class="card-body">
+                        <h4 class="card-title text-primary">Estado Atual do Sistema</h4>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <div class="stat bg-base-200 rounded-lg">
+                                <div class="stat-title">Fragmentação Total</div>
+                                <div class="stat-value text-lg" id="modal-internal-fragmentation">0 KB</div>
+                                <div class="stat-desc" id="modal-internal-fragmentation-percent">0% do espaço usado</div>
+                            </div>
+                            <div class="stat bg-base-200 rounded-lg">
+                                <div class="stat-title">Tamanho do Bloco</div>
+                                <div class="stat-value text-lg" id="modal-block-size">4 KB</div>
+                                <div class="stat-desc">Tamanho fixo por bloco</div>
+                            </div>
+                            <div class="stat bg-base-200 rounded-lg">
+                                <div class="stat-title">Arquivos</div>
+                                <div class="stat-value text-lg" id="modal-files-count">0</div>
+                                <div class="stat-desc">Total de arquivos</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Explicação -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">O que é Fragmentação Interna?</h4>
+                        <p class="mb-3">A fragmentação interna é o espaço desperdiçado dentro dos blocos alocados para um arquivo quando o arquivo não preenche completamente esses blocos.</p>
+                        
+                        <div class="mockup-code text-sm mb-4">
+                            <pre><code>
+Exemplo com blocos de 4KB:
+Arquivo de 10KB precisa de 3 blocos (12KB total)
+Fragmentação = 12KB - 10KB = 2KB desperdiçados
+
+Bloco 1: [████████] 4KB usado
+Bloco 2: [████████] 4KB usado  
+Bloco 3: [██░░░░░░] 2KB usado, 2KB desperdiçado</code></pre>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <span><strong>Fórmula:</strong> Fragmentação Interna = (Blocos Alocados × Tamanho do Bloco) - Tamanho Real do Arquivo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Causas e Impactos -->
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="card bg-base-200">
+                        <div class="card-body">
+                            <h4 class="card-title text-warning">Principais Causas</h4>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>Tamanho de bloco grande:</strong> Blocos maiores causam mais desperdício</li>
+                                <li><strong>Arquivos pequenos:</strong> Arquivos menores que o bloco desperdiçam muito espaço</li>
+                                <li><strong>Tamanhos irregulares:</strong> Arquivos que não são múltiplos do tamanho do bloco</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card bg-base-200">
+                        <div class="card-body">
+                            <h4 class="card-title text-error">Impactos</h4>
+                            <ul class="list-disc list-inside space-y-1">
+                                <li><strong>Desperdício de espaço:</strong> Reduz a capacidade efetiva do disco</li>
+                                <li><strong>Custo financeiro:</strong> Mais armazenamento necessário</li>
+                                <li><strong>Performance:</strong> Pode afetar a eficiência do cache</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Soluções -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title text-success">Estratégias para Reduzir Fragmentação</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-semibold">Tamanho de Bloco Adequado:</h5>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li>Blocos menores para arquivos pequenos</li>
+                                    <li>Blocos maiores para arquivos grandes</li>
+                                    <li>Equilibrar performance vs. desperdício</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold">Técnicas Avançadas:</h5>
+                                <ul class="list-disc list-inside text-sm space-y-1">
+                                    <li>Blocos de tamanhos variáveis</li>
+                                    <li>Compactação de arquivos pequenos</li>
+                                    <li>Sistemas de arquivos modernos (ZFS, Btrfs)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparação de Tamanhos -->
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Impacto do Tamanho do Bloco</h4>
+                        <div class="overflow-x-auto">
+                            <table class="table table-zebra">
+                                <thead>
+                                    <tr>
+                                        <th>Tamanho do Bloco</th>
+                                        <th>Arquivo 1KB</th>
+                                        <th>Arquivo 10KB</th>
+                                        <th>Fragmentação Média</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge badge-info">1KB</span></td>
+                                        <td>0KB desperdiçado</td>
+                                        <td>0KB desperdiçado</td>
+                                        <td><span class="badge badge-success">Baixa</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-warning">4KB</span></td>
+                                        <td>3KB desperdiçado</td>
+                                        <td>2KB desperdiçado</td>
+                                        <td><span class="badge badge-warning">Média</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge badge-error">64KB</span></td>
+                                        <td>63KB desperdiçado</td>
+                                        <td>54KB desperdiçado</td>
+                                        <td><span class="badge badge-error">Alta</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

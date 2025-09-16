@@ -9,6 +9,7 @@ export default function updateAll() {
     updateSpaceManagementVisualizer();
     updatePathDisplay();
     updateFileBrowserSidebar();
+    updateModalInfo();
 }
 
 export function updateStats() {
@@ -700,18 +701,213 @@ function renderDirectoryTreeRecursive(nodes, parentUl, currentPath) {
     });
 }
 
-// Expose functions globally for onclick handlers
-window.updateFilesList = updateBrowser;
-window.updatePathDisplay = updatePathDisplay;
-window.navigateToParent = function() {
-    globalState.navigateToParent();
-    updateBrowser();
-    updatePathDisplay();
-    updateFileBrowserSidebar();
-};
-window.navigateToPath = function(path) {
-    globalState.setCurrentPath(path);
-    updateBrowser();
-    updatePathDisplay();
-    updateFileBrowserSidebar();
-};
+// Modal update functions
+export function updateModalInfo() {
+    updateInternalFragmentationModal();
+    updateDiskModal();
+    updateBlocksModal();
+}
+
+export function updateBlocksModal() {
+    const diskConfig = globalState.getDiskConfig();
+    const disk = globalState.getDisk();
+    
+    // Calculate block usage
+    const usedBlocks = disk.partitions.reduce((sum, partition) => sum + partition.usedBlocks, 0);
+    const totalBlocks = diskConfig.blockQuantity || 1;
+    const blockUsagePercent = ((usedBlocks / totalBlocks) * 100).toFixed(2);
+    
+    // Update modal elements
+    const modalBlocksQuantity = document.getElementById('modal-blocks-quantity');
+    const modalBlocksSize = document.getElementById('modal-blocks-size');
+    const modalBlocksUsed = document.getElementById('modal-blocks-used');
+    const modalBlocksUsagePercent = document.getElementById('modal-blocks-usage-percent');
+    const modalBlocksProgress = document.getElementById('modal-blocks-progress');
+    const modalBlocksProgressText = document.getElementById('modal-blocks-progress-text');
+    
+    if (modalBlocksQuantity) {
+        modalBlocksQuantity.textContent = totalBlocks.toString();
+    }
+    
+    if (modalBlocksSize) {
+        modalBlocksSize.textContent = `${diskConfig.blockSize} KB`;
+    }
+    
+    if (modalBlocksUsed) {
+        modalBlocksUsed.textContent = usedBlocks.toString();
+    }
+    
+    if (modalBlocksUsagePercent) {
+        modalBlocksUsagePercent.textContent = `${blockUsagePercent}% do total`;
+    }
+    
+    if (modalBlocksProgress) {
+        modalBlocksProgress.value = parseFloat(blockUsagePercent);
+    }
+    
+    if (modalBlocksProgressText) {
+        modalBlocksProgressText.textContent = `${blockUsagePercent}%`;
+    }
+}
+
+export function updateInternalFragmentationModal() {
+    const diskConfig = globalState.getDiskConfig();
+    const disk = globalState.getDisk();
+    
+    // Calculate internal fragmentation
+    const usedBlocks = disk.partitions.reduce((sum, partition) => sum + partition.usedBlocks, 0);
+    const usedSpace = disk.files.reduce((sum, file) => sum + file.sizeInKB, 0);
+    const blockSize = diskConfig.blockSize || 1;
+    const internalFragmentation = (usedBlocks * blockSize) - usedSpace;
+    
+    // Update modal elements
+    const modalInternalFragmentation = document.getElementById('modal-internal-fragmentation');
+    const modalInternalFragmentationPercent = document.getElementById('modal-internal-fragmentation-percent');
+    const modalBlockSize = document.getElementById('modal-block-size');
+    const modalFilesCount = document.getElementById('modal-files-count');
+    
+    if (modalInternalFragmentation) {
+        modalInternalFragmentation.textContent = `${internalFragmentation} KB`;
+    }
+    
+    if (modalInternalFragmentationPercent) {
+        let fragmentationPercent = usedSpace > 0 ? ((internalFragmentation / usedSpace) * 100).toFixed(2) : '0.00';
+        modalInternalFragmentationPercent.textContent = `${fragmentationPercent}% do espaço usado`;
+    }
+    
+    if (modalBlockSize) {
+        modalBlockSize.textContent = `${blockSize} KB`;
+    }
+    
+    if (modalFilesCount) {
+        modalFilesCount.textContent = disk.files.length.toString();
+    }
+}
+
+export function updateDiskModal() {
+    const diskConfig = globalState.getDiskConfig();
+    const disk = globalState.getDisk();
+    
+    // Calculate disk usage
+    const usedBlocks = disk.partitions.reduce((sum, partition) => sum + partition.usedBlocks, 0);
+    const usedSpace = disk.files.reduce((sum, file) => sum + file.sizeInKB, 0);
+    const totalCapacity = diskConfig.totalCapacity || 1;
+    const diskUsagePercent = ((usedSpace / totalCapacity) * 100).toFixed(2);
+    
+    // Update modal elements
+    const modalDiskSize = document.getElementById('modal-disk-size');
+    const modalDiskUsed = document.getElementById('modal-disk-used');
+    const modalDiskUsagePercent = document.getElementById('modal-disk-usage-percent');
+    const modalTotalBlocks = document.getElementById('modal-total-blocks');
+    const modalBlockSizeDisk = document.getElementById('modal-block-size-disk');
+    const modalDiskProgress = document.getElementById('modal-disk-progress');
+    const modalDiskProgressText = document.getElementById('modal-disk-progress-text');
+    const modalPartitionsList = document.getElementById('modal-partitions-list');
+    
+    if (modalDiskSize) {
+        modalDiskSize.textContent = `${(totalCapacity / 1024).toFixed(2)} MB`;
+    }
+    
+    if (modalDiskUsed) {
+        modalDiskUsed.textContent = `${usedSpace} KB`;
+    }
+    
+    if (modalDiskUsagePercent) {
+        modalDiskUsagePercent.textContent = `${diskUsagePercent}% utilizado`;
+    }
+    
+    if (modalTotalBlocks) {
+        modalTotalBlocks.textContent = diskConfig.blockQuantity.toString();
+    }
+    
+    if (modalBlockSizeDisk) {
+        modalBlockSizeDisk.textContent = `${diskConfig.blockSize} KB`;
+    }
+    
+    if (modalDiskProgress) {
+        modalDiskProgress.value = parseFloat(diskUsagePercent);
+    }
+    
+    if (modalDiskProgressText) {
+        modalDiskProgressText.textContent = `${diskUsagePercent}%`;
+    }
+    
+    // Update partitions list in modal
+    if (modalPartitionsList) {
+        const partitions = disk.partitions || [];
+        
+        if (partitions.length === 0) {
+            modalPartitionsList.innerHTML = '<div class="text-gray-500 text-sm">Nenhuma partição criada ainda</div>';
+        } else {
+            modalPartitionsList.innerHTML = partitions.map(partition => {
+                const partitionSize = (partition.endBlock - partition.startBlock + 1) * diskConfig.blockSize;
+                const usagePercent = partition.getUsagePercentage();
+                
+                return `
+                    <div class="flex items-center justify-between p-2 bg-base-100 rounded border">
+                        <div>
+                            <div class="font-semibold">${partition.name}</div>
+                            <div class="text-sm text-gray-600">
+                                Blocos ${partition.startBlock}-${partition.endBlock} | 
+                                ${(partitionSize / 1024).toFixed(2)} MB | 
+                                ${partition.allocationMethod}
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm">${usagePercent}% usado</div>
+                            <progress class="progress progress-primary w-20" value="${usagePercent}" max="100"></progress>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+    }
+}
+
+// Add event listeners to update modals when they are opened
+document.addEventListener('DOMContentLoaded', function() {
+    // Update blocks modal when opened
+    const blocksModal = document.getElementById('info_blocks');
+    if (blocksModal) {
+        blocksModal.addEventListener('show', updateBlocksModal);
+        // Also listen for when modal becomes visible (DaisyUI specific)
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.target === blocksModal && blocksModal.open) {
+                    updateBlocksModal();
+                }
+            });
+        });
+        observer.observe(blocksModal, { attributes: true, attributeFilter: ['open'] });
+    }
+
+    // Update internal fragmentation modal when opened
+    const internalFragModal = document.getElementById('info_internal_fragmentation');
+    if (internalFragModal) {
+        internalFragModal.addEventListener('show', updateInternalFragmentationModal);
+        // Also listen for when modal becomes visible (DaisyUI specific)
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.target === internalFragModal && internalFragModal.open) {
+                    updateInternalFragmentationModal();
+                }
+            });
+        });
+        observer.observe(internalFragModal, { attributes: true, attributeFilter: ['open'] });
+    }
+    
+    // Update disk modal when opened
+    const diskModal = document.getElementById('info_disk');
+    if (diskModal) {
+        diskModal.addEventListener('show', updateDiskModal);
+        // Also listen for when modal becomes visible (DaisyUI specific)
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.target === diskModal && diskModal.open) {
+                    updateDiskModal();
+                }
+            });
+        });
+        observer.observe(diskModal, { attributes: true, attributeFilter: ['open'] });
+    }
+});
