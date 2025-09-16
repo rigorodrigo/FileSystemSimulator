@@ -201,8 +201,8 @@ export function updateBrowser() {
         `;
         dirElem.onclick = () => {
             globalState.navigateToDirectory(directory.name);
-            window.updateFilesList();
-            window.updatePathDisplay();
+            updateBrowser();
+            updatePathDisplay();
             updateFileBrowserSidebar();
         };
         fileListElem.appendChild(dirElem);
@@ -631,7 +631,7 @@ export function updateFileBrowserSidebar() {
     const isRootActive = currentPath === '/';
     rootLi.innerHTML = `
         <a class="${isRootActive ? 'active' : ''}" onclick="navigateToPath('/')" style="cursor: pointer;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
             ${selectedPartition.name}
         </a>
     `;
@@ -911,3 +911,20 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(diskModal, { attributes: true, attributeFilter: ['open'] });
     }
 });
+
+// Expose functions globally for onclick handlers
+window.updateFilesList = updateBrowser;
+window.updateBrowser = updateBrowser;
+window.updatePathDisplay = updatePathDisplay;
+window.navigateToParent = function() {
+    globalState.navigateToParent();
+    updateBrowser();
+    updatePathDisplay();
+    updateFileBrowserSidebar();
+};
+window.navigateToPath = function(path) {
+    globalState.setCurrentPath(path);
+    updateBrowser();
+    updatePathDisplay();
+    updateFileBrowserSidebar();
+};
