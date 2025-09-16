@@ -391,12 +391,55 @@
     </dialog>
     
     <dialog id="info_files" class="modal">
-        <div class="modal-box">
+        <div class="modal-box max-w-3xl">
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
-            <h3 class="text-lg font-bold">Hello!</h3>
-            <p class="py-4">Press ESC key or click outside to close</p>
+            <h3 class="text-lg font-bold mb-4">Arquivos no Sistema</h3>
+            
+            <div class="space-y-4">
+                <div class="alert alert-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Os arquivos são a unidade básica de armazenamento de dados no sistema de arquivos.</span>
+                </div>
+
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Características dos Arquivos</h4>
+                        <ul class="list-disc list-inside space-y-2">
+                            <li><strong>Nome:</strong> Identificador único dentro do diretório</li>
+                            <li><strong>Tamanho:</strong> Quantidade de dados armazenados em KB</li>
+                            <li><strong>Blocos:</strong> Unidades físicas onde os dados são armazenados</li>
+                            <li><strong>Metadados:</strong> Informações sobre o arquivo (tamanho, localização, etc.)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Como os Arquivos São Armazenados</h4>
+                        <div class="space-y-3">
+                            <p>No simulador, cada arquivo:</p>
+                            <ul class="list-disc list-inside space-y-1 ml-4">
+                                <li>Ocupa um ou mais blocos dependendo do seu tamanho</li>
+                                <li>É alocado conforme o método escolhido para a partição</li>
+                                <li>Pode sofrer fragmentação dependendo do método de alocação</li>
+                                <li>Tem seus blocos visualizados na representação gráfica do disco</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Fragmentação Interna</h4>
+                        <p>Quando um arquivo não preenche completamente seus blocos alocados, ocorre fragmentação interna. Por exemplo, um arquivo de 3KB em blocos de 4KB desperdiça 1KB.</p>
+                        <div class="mt-2">
+                            <span class="badge badge-warning">Fragmentação = Espaço Alocado - Tamanho Real do Arquivo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <form method="dialog" class="modal-backdrop">
             <button>close</button>
@@ -404,12 +447,62 @@
     </dialog>
     
     <dialog id="info_directories" class="modal">
-        <div class="modal-box">
+        <div class="modal-box max-w-3xl">
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
-            <h3 class="text-lg font-bold">Hello!</h3>
-            <p class="py-4">Press ESC key or click outside to close</p>
+            <h3 class="text-lg font-bold mb-4">Diretórios no Sistema</h3>
+            
+            <div class="space-y-4">
+                <div class="alert alert-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span>Os diretórios organizam e agrupam arquivos de forma hierárquica no sistema.</span>
+                </div>
+
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">O que são Diretórios</h4>
+                        <p>Diretórios são estruturas especiais que contêm referências para outros arquivos e diretórios. Eles permitem organizar o sistema de arquivos de forma hierárquica.</p>
+                        
+                        <div class="mt-3">
+                            <h5 class="font-semibold">Características:</h5>
+                            <ul class="list-disc list-inside space-y-1 ml-4">
+                                <li>Contêm tabelas com nomes e ponteiros para arquivos</li>
+                                <li>Podem conter outros diretórios (subdirectórios)</li>
+                                <li>Ocupam blocos no disco como qualquer arquivo</li>
+                                <li>Permitem navegação hierárquica</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Navegação</h4>
+                        <div class="space-y-3">
+                            <p>O simulador suporta navegação completa pelos diretórios:</p>
+                            <ul class="list-disc list-inside space-y-1 ml-4">
+                                <li><strong>Caminho Atual:</strong> Mostrado na barra de endereço</li>
+                                <li><strong>Navegação:</strong> Clique nos diretórios para entrar</li>
+                                <li><strong>Voltar:</strong> Use o botão de seta para retornar ao diretório pai</li>
+                                <li><strong>Criação:</strong> Novos diretórios podem ser criados em qualquer local</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-base-200">
+                    <div class="card-body">
+                        <h4 class="card-title">Estruturas Suportadas</h4>
+                        <div class="space-y-2">
+                            <div class="badge badge-outline">Linear: Todos os arquivos no mesmo nível</div>
+                            <div class="badge badge-outline">Dois Níveis: Diretórios de usuário apenas</div>
+                            <div class="badge badge-outline">Árvore: Hierarquia completa e flexível</div>
+                        </div>
+                        <p class="mt-3 text-sm">A estrutura escolhida na criação da partição determina como os diretórios se comportam.</p>
+                    </div>
+                </div>
+            </div>
         </div>
         <form method="dialog" class="modal-backdrop">
             <button>close</button>
@@ -417,12 +510,121 @@
     </dialog>
     
     <dialog id="info_method_allocation" class="modal">
-        <div class="modal-box">
+        <div class="modal-box max-w-4xl">
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
-            <h3 class="text-lg font-bold">Hello!</h3>
-            <p class="py-4">Press ESC key or click outside to close</p>
+            <h3 class="text-lg font-bold mb-4">Métodos de Alocação de Arquivos</h3>
+            
+            <div class="space-y-6">
+                <!-- Contígua -->
+                <div class="card bg-base-200 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title text-success">Alocação Contígua</h4>
+                        <div class="space-y-3">
+                            <p><strong>Como funciona:</strong> O arquivo é armazenado em blocos consecutivos no disco. Todos os blocos ficam fisicamente adjacentes.</p>
+                            
+                            <div class="alert alert-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span><strong>Performance:</strong> Excelente para leitura sequencial, pois minimiza o movimento da cabeça do disco.</span>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-success">Vantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Acesso muito rápido</li>
+                                        <li>Simples de implementar</li>
+                                        <li>Baixo overhead de metadados</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-error">Desvantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Fragmentação externa severa</li>
+                                        <li>Dificulta crescimento de arquivos</li>
+                                        <li>Desperdiça espaço</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="badge badge-outline">Uso real: CDs, DVDs, alguns sistemas embarcados</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Encadeada -->
+                <div class="card bg-base-200 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title text-warning">Alocação Encadeada</h4>
+                        <div class="space-y-3">
+                            <p><strong>Como funciona:</strong> Cada bloco contém um ponteiro para o próximo bloco do arquivo. Os blocos podem estar espalhados pelo disco.</p>
+                            
+                            <div class="alert alert-warning">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.996-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path></svg>
+                                <span><strong>Performance:</strong> Boa para gravação, mas acesso sequencial pode ser lento devido aos saltos entre blocos.</span>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-success">Vantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Elimina fragmentação externa</li>
+                                        <li>Arquivos podem crescer facilmente</li>
+                                        <li>Usa eficientemente o espaço</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-error">Desvantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Acesso aleatório muito lento</li>
+                                        <li>Ponteiros ocupam espaço</li>
+                                        <li>Vulnerável à corrupção</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="badge badge-outline">Uso real: Sistemas de arquivos simples, algumas implementações de FAT</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Indexada -->
+                <div class="card bg-base-200 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title text-primary">Alocação Indexada</h4>
+                        <div class="space-y-3">
+                            <p><strong>Como funciona:</strong> Um bloco especial (bloco índice) contém ponteiros para todos os blocos de dados do arquivo.</p>
+                            
+                            <div class="alert alert-success">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span><strong>Performance:</strong> Equilibra bem acesso sequencial e aleatório. Excelente para acesso direto.</span>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-success">Vantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Acesso aleatório rápido</li>
+                                        <li>Sem fragmentação externa</li>
+                                        <li>Suporta arquivos de tamanho variável</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-error">Desvantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Overhead do bloco índice</li>
+                                        <li>Tamanho máximo limitado</li>
+                                        <li>Complexidade adicional</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="badge badge-outline">Uso real: UNIX (inodes), NTFS, ext2/3/4</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <form method="dialog" class="modal-backdrop">
             <button>close</button>
@@ -430,12 +632,160 @@
     </dialog>
     
     <dialog id="info_method_directories" class="modal">
-        <div class="modal-box">
+        <div class="modal-box max-w-4xl">
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
-            <h3 class="text-lg font-bold">Hello!</h3>
-            <p class="py-4">Press ESC key or click outside to close</p>
+            <h3 class="text-lg font-bold mb-4">Métodos de Estrutura de Diretórios</h3>
+            
+            <div class="space-y-6">
+                <!-- Linear -->
+                <div class="card bg-base-200 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title text-info">Estrutura Linear</h4>
+                        <div class="space-y-3">
+                            <p><strong>Como funciona:</strong> Todos os arquivos ficam em um único diretório. Não há subdivisões ou hierarquia.</p>
+                            
+                            <div class="alert alert-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span><strong>Performance:</strong> Busca linear O(n). Simples mas ineficiente para muitos arquivos.</span>
+                            </div>
+                            
+                            <div class="mockup-code text-sm">
+                                <pre><code>/
+├── arquivo1.txt
+├── arquivo2.doc
+├── foto.jpg
+└── video.mp4</code></pre>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-success">Vantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Implementação muito simples</li>
+                                        <li>Nenhuma complexidade de navegação</li>
+                                        <li>Mínimo overhead</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-error">Desvantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Problemas de nomes únicos</li>
+                                        <li>Organização impossível</li>
+                                        <li>Busca lenta com muitos arquivos</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="badge badge-outline">Uso real: Sistemas muito antigos, disquetes simples</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dois Níveis -->
+                <div class="card bg-base-200 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title text-warning">Estrutura de Dois Níveis</h4>
+                        <div class="space-y-3">
+                            <p><strong>Como funciona:</strong> Existe um diretório mestre que aponta para diretórios de usuários. Cada usuário tem seu próprio diretório.</p>
+                            
+                            <div class="alert alert-warning">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.996-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path></svg>
+                                <span><strong>Performance:</strong> Busca O(1) para usuário + O(n) para arquivo. Melhor que linear.</span>
+                            </div>
+                            
+                            <div class="mockup-code text-sm">
+                                <pre><code>/
+├── user1/
+│   ├── doc1.txt
+│   └── foto1.jpg
+├── user2/
+│   ├── projeto.doc
+│   └── planilha.xls
+└── user3/
+    └── video.mp4</code></pre>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-success">Vantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Isolamento entre usuários</li>
+                                        <li>Nomes podem repetir entre usuários</li>
+                                        <li>Organização básica</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-error">Desvantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Limitado a dois níveis apenas</li>
+                                        <li>Não permite sub-organização</li>
+                                        <li>Usuários não podem criar subdiretórios</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="badge badge-outline">Uso real: Primeiros sistemas multiusuário, alguns mainframes antigos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Árvore -->
+                <div class="card bg-base-200 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title text-success">Estrutura em Árvore</h4>
+                        <div class="space-y-3">
+                            <p><strong>Como funciona:</strong> Hierarquia completa com diretórios que podem conter arquivos e outros diretórios. Estrutura recursiva.</p>
+                            
+                            <div class="alert alert-success">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span><strong>Performance:</strong> Busca O(log n) com indexação, O(h) onde h é a altura da árvore.</span>
+                            </div>
+                            
+                            <div class="mockup-code text-sm">
+                                <pre><code>/
+├── home/
+│   ├── usuario1/
+│   │   ├── Documentos/
+│   │   │   ├── trabalho.doc
+│   │   │   └── relatorio.pdf
+│   │   └── Imagens/
+│   │       └── foto.jpg
+│   └── usuario2/
+│       └── projeto/
+│           ├── src/
+│           └── docs/
+└── sistema/
+    ├── bin/
+    └── lib/</code></pre>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-success">Vantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Organização hierárquica natural</li>
+                                        <li>Flexibilidade total</li>
+                                        <li>Busca eficiente</li>
+                                        <li>Caminhos absolutos e relativos</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-error">Desvantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Implementação mais complexa</li>
+                                        <li>Possibilidade de loops infinitos</li>
+                                        <li>Overhead de metadados</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="badge badge-outline">Uso real: Windows, Linux, macOS, praticamente todos os SOs modernos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <form method="dialog" class="modal-backdrop">
             <button>close</button>
@@ -443,12 +793,176 @@
     </dialog>
     
     <dialog id="info_free_space_management" class="modal">
-        <div class="modal-box">
+        <div class="modal-box max-w-4xl">
             <form method="dialog">
                 <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
             </form>
-            <h3 class="text-lg font-bold">Hello!</h3>
-            <p class="py-4">Press ESC key or click outside to close</p>
+            <h3 class="text-lg font-bold mb-4">Métodos de Gerenciamento de Espaço Livre</h3>
+            
+            <div class="space-y-6">
+                <!-- Bitmap -->
+                <div class="card bg-base-200 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title text-success">Mapa de Bits (Bitmap)</h4>
+                        <div class="space-y-3">
+                            <p><strong>Como funciona:</strong> Cada bloco no disco é representado por um bit. 0 = livre, 1 = ocupado. O bitmap é uma sequência contínua de bits.</p>
+                            
+                            <div class="alert alert-info">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span><strong>Performance:</strong> Busca O(n) no pior caso. Operações em lote eficientes com operações bitwise.</span>
+                            </div>
+                            
+                            <div class="mockup-code text-sm">
+                                <pre><code>
+Exemplo para 16 blocos:
+Blocos:  0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15
+Bitmap:  0 1 1 0 0 1 0 0 1 1  0  1  0  0  1  0
+Status:  L O O L L O L L O O  L  O  L  L  O  L
+
+L = Livre, O = Ocupado</code></pre>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-success">Vantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Uso mínimo de memória</li>
+                                        <li>Operações bitwise muito rápidas</li>
+                                        <li>Fácil de implementar</li>
+                                        <li>Localização rápida de blocos contíguos</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-error">Desvantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Busca sequencial pode ser lenta</li>
+                                        <li>Todo o bitmap deve estar na memória</li>
+                                        <li>Não adequado para discos muito grandes</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="stats stats-vertical lg:stats-horizontal shadow mt-4">
+                                <div class="stat">
+                                    <div class="stat-title">Espaço para 1GB</div>
+                                    <div class="stat-value text-sm">32KB</div>
+                                    <div class="stat-desc">com blocos de 4KB</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-title">Complexidade</div>
+                                    <div class="stat-value text-sm">O(n)</div>
+                                    <div class="stat-desc">busca linear</div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="badge badge-outline">Uso real: Linux ext2/3/4, NTFS, muitos sistemas embarcados</div>
+                    </div>
+                </div>
+
+                <!-- Lista de Blocos Livres -->
+                <div class="card bg-base-200 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title text-primary">Lista de Blocos Livres</h4>
+                        <div class="space-y-3">
+                            <p><strong>Como funciona:</strong> Uma lista encadeada ou array que contém os números de todos os blocos livres no disco.</p>
+                            
+                            <div class="alert alert-success">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <span><strong>Performance:</strong> Alocação O(1) muito rápida. Liberação também O(1).</span>
+                            </div>
+                            
+                            <div class="mockup-code text-sm">
+                                <pre><code>
+Exemplo para 16 blocos:
+Blocos ocupados: 1, 2, 5, 8, 9, 11, 14
+
+Lista de blocos livres:
+[0, 3, 4, 6, 7, 10, 12, 13, 15]
+
+Alocação: remove primeiro da lista
+Liberação: adiciona ao final da lista</code></pre>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-4">
+                                <div>
+                                    <h5 class="font-semibold text-success">Vantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Alocação extremamente rápida</li>
+                                        <li>Não precisa varrer o disco</li>
+                                        <li>Fácil implementação</li>
+                                        <li>Memória proporcional ao espaço livre</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <h5 class="font-semibold text-error">Desvantagens:</h5>
+                                    <ul class="list-disc list-inside text-sm space-y-1">
+                                        <li>Uso de memória variável</li>
+                                        <li>Pode usar muita memória se muito espaço livre</li>
+                                        <li>Difícil encontrar blocos contíguos</li>
+                                        <li>Perda de dados = perda da lista</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="stats stats-vertical lg:stats-horizontal shadow mt-4">
+                                <div class="stat">
+                                    <div class="stat-title">Espaço variável</div>
+                                    <div class="stat-value text-sm">4 bytes</div>
+                                    <div class="stat-desc">por bloco livre</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-title">Complexidade</div>
+                                    <div class="stat-value text-sm">O(1)</div>
+                                    <div class="stat-desc">alocação</div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <div class="badge badge-outline">Uso real: DOS antigo, alguns sistemas de tempo real, sistemas simples</div>
+                    </div>
+                </div>
+
+                <!-- Comparação -->
+                <div class="card bg-base-300 shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title">Comparação dos Métodos</h4>
+                        <div class="overflow-x-auto">
+                            <table class="table table-zebra">
+                                <thead>
+                                    <tr>
+                                        <th>Aspecto</th>
+                                        <th>Bitmap</th>
+                                        <th>Lista de Blocos Livres</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><strong>Velocidade de Alocação</strong></td>
+                                        <td><span class="badge badge-warning">Moderada</span></td>
+                                        <td><span class="badge badge-success">Muito Rápida</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Uso de Memória</strong></td>
+                                        <td><span class="badge badge-success">Fixo e Baixo</span></td>
+                                        <td><span class="badge badge-warning">Variável</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Blocos Contíguos</strong></td>
+                                        <td><span class="badge badge-success">Fácil</span></td>
+                                        <td><span class="badge badge-error">Difícil</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Implementação</strong></td>
+                                        <td><span class="badge badge-info">Simples</span></td>
+                                        <td><span class="badge badge-info">Simples</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <form method="dialog" class="modal-backdrop">
             <button>close</button>
