@@ -60,7 +60,7 @@ function allocateDirectoryBlocks(directory, partition) {
             }
             break;
 
-        case 'Indexada Combinada':
+        case 'Indexada':
             allocationResult = allocateIndexed(partition, 1);
             if (allocationResult) {
                 directory.blockAllocated = allocationResult[0];

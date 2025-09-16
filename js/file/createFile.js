@@ -86,7 +86,7 @@ function allocateFileBlocks(file, partition) {
             }
             break;
             
-        case 'Indexada Combinada':
+        case 'Indexada':
             allocationResult = allocateIndexed(partition, file.requiredBlocks);
             if (allocationResult) {
                 file.allocatedBlocks = [allocationResult.indexBlock, ...allocationResult.fileBlocks];
