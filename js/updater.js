@@ -345,8 +345,18 @@ function createFileCard(file, partition) {
                 </div>
             </div>
             
-            <!-- Delete Button -->
-            <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-shrink-0">
+            <!-- Action Buttons -->
+            <div class="opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-shrink-0 flex items-center space-x-1">
+                <button onclick="event.stopPropagation(); confirmResizeFile('${file.id}', '${file.name}')" 
+                        class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-blue-100 dark:hover:bg-blue-900/30 text-blue-500 hover:text-blue-600 transition-colors" 
+                        title="Redimensionar arquivo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h6v6"></path>
+                        <path d="M9 21H3v-6"></path>
+                        <path d="M21 3l-7 7"></path>
+                        <path d="M3 21l7-7"></path>
+                    </svg>
+                </button>
                 <button onclick="event.stopPropagation(); confirmDeleteFile('${file.id}', '${file.name}')" 
                         class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-red-100 dark:hover:bg-red-900/30 text-red-500 hover:text-red-600 transition-colors" 
                         title="Excluir arquivo">
