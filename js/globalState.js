@@ -67,6 +67,10 @@ class GlobalState {
         this.disk.directories.push(directory);
     }
 
+    getDirectoryById(directoryId) {
+        return this.disk.directories.find(dir => dir.id == directoryId);
+    }
+
     removeDirectory(directoryId) {
         const dirIndex = this.disk.directories.findIndex(dir => dir.id == directoryId);
         if (dirIndex !== -1) {
