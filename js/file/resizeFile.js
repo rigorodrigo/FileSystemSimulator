@@ -109,11 +109,12 @@ function expandContiguousFile(file, partition, blocksNeeded) {
     const lastBlock = Math.max(...file.allocatedBlocks);
     const disk = globalState.getDisk();
     
-    // Check if we can expand contiguously
+    // Check if we can expand contiguously within partition boundaries
     for (let i = 1; i <= blocksNeeded; i++) {
         const nextBlock = lastBlock + i;
-        if (nextBlock >= disk.blocks.length || 
-            disk.blocks[nextBlock].dataset.status !== 'unallocated') {
+        if (nextBlock > partition.endBlock || 
+            nextBlock >= disk.blocks.length || 
+            disk.blocks[nextBlock].dataset.status !== 'free') {
             throw new Error('Não é possível expandir o arquivo de forma contígua. Não há blocos livres consecutivos suficientes.');
         }
     }
@@ -142,7 +143,7 @@ function expandLinkedFile(file, partition, blocksNeeded) {
     
     // Find free blocks
     for (let i = partition.startBlock; i <= partition.endBlock && freeBlocks.length < blocksNeeded; i++) {
-        if (disk.blocks[i].dataset.status === 'free' || disk.blocks[i].dataset.status === 'unallocated') {
+        if (disk.blocks[i].dataset.status === 'free') {
             freeBlocks.push(i);
         }
     }
@@ -173,7 +174,7 @@ function expandIndexedFile(file, partition, blocksNeeded) {
     
     // Find free blocks
     for (let i = partition.startBlock; i <= partition.endBlock && freeBlocks.length < blocksNeeded; i++) {
-        if (disk.blocks[i].dataset.status === 'free' || disk.blocks[i].dataset.status === 'unallocated') {
+        if (disk.blocks[i].dataset.status === 'free') {
             freeBlocks.push(i);
         }
     }
