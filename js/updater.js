@@ -105,7 +105,17 @@ export function updatePartitionsList() {
 
 function createPartitionElement(partition) {
     const div = document.createElement('div');
-    div.className = 'border p-2 rounded-lg space-y-2 cursor-pointer hover:bg-primary/15 transition-colors';
+    
+    // Check if this partition is currently selected to apply appropriate classes
+    const selectedPartition = globalState.getSelectedPartition();
+    const isSelected = selectedPartition && selectedPartition.id === partition.id;
+    
+    if (isSelected) {
+        div.className = 'border p-2 rounded-lg space-y-2 cursor-pointer hover:bg-primary/15 transition-colors ring-2 ring-primary bg-primary/20';
+    } else {
+        div.className = 'border p-2 rounded-lg space-y-2 cursor-pointer hover:bg-primary/15 transition-colors';
+    }
+    
     div.dataset.partitionId = partition.id;
     
     const usagePercentage = partition.getUsagePercentage();

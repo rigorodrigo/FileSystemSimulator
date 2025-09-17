@@ -32,20 +32,21 @@ class PartitionSelector {
     }
 
     selectPartition(partitionId, partitionElement) {
-        globalState.setSelectedPartition(partitionId);
+        // Ensure partitionId is treated as a number for consistent comparison
+        const numericPartitionId = parseFloat(partitionId);
+        globalState.setSelectedPartition(numericPartitionId);
 
         this.updateVisualFeedback(partitionElement);
 
         this.updateSelectedPartitionInfo();
 
-        this.dispatchSelectionEvent(partitionId);
+        this.dispatchSelectionEvent(numericPartitionId);
     }
 
     updateVisualFeedback(selectedElement) {
         // Remove selection from previously selected partition
         if (this.selectedPartitionElement) {
             this.selectedPartitionElement.classList.remove('ring-2', 'ring-primary', 'bg-primary/20');
-            this.selectedPartitionElement.classList.add('bg-primary/10');
         }
 
         // Add selection to newly selected partition
@@ -109,11 +110,16 @@ class PartitionSelector {
             // Find the partition element again after re-render
             const partitionElement = document.querySelector(`[data-partition-id="${selectedPartition.id}"]`);
             if (partitionElement) {
-                this.updateVisualFeedback(partitionElement);
+                // Update the reference to the selected element
+                this.selectedPartitionElement = partitionElement;
+                // Visual feedback is already applied during creation, no need to update again
             } else {
                 // Partition no longer exists, clear selection
                 this.clearSelection();
             }
+        } else {
+            // No partition selected, clear any visual selection
+            this.selectedPartitionElement = null;
         }
     }
 }
