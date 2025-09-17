@@ -10,6 +10,7 @@ export default function updateAll() {
     updateSpaceManagementVisualizer();
     updatePathDisplay();
     updateFileBrowserSidebar();
+    updateCreateOptionsDropdown();
     updateModalInfo();
 }
 
@@ -288,6 +289,7 @@ function createDirectoryCard(directory) {
         updateBrowser();
         updatePathDisplay();
         updateFileBrowserSidebar();
+        updateCreateOptionsDropdown();
     };
     
     return dirCard;
@@ -973,6 +975,65 @@ export function updateFileBrowserSidebar() {
     }
 }
 
+export function updateCreateOptionsDropdown() {
+    const selectedPartition = globalState.getSelectedPartition();
+    const createDirectoryOption = document.querySelector('[onclick*="create_directory.showModal()"]');
+    
+    if (!createDirectoryOption) return;
+    
+    if (!selectedPartition) {
+        // No partition selected, disable directory creation
+        createDirectoryOption.style.display = 'none';
+        return;
+    }
+    
+    const currentPath = globalState.getCurrentPath();
+    let showOption = true;
+    let disableOption = false;
+    
+    switch (selectedPartition.directoryMethod) {
+        case 'Linear':
+            // Linear method does not allow any directories
+            showOption = false;
+            break;
+            
+        case 'Dois Níveis':
+            // Two-level method only allows directories at root level
+            showOption = true;
+            disableOption = (currentPath !== '/');
+            break;
+            
+        case 'Árvore':
+            // Tree method allows directories at any level
+            showOption = true;
+            disableOption = false;
+            break;
+            
+        default:
+            showOption = false;
+    }
+    
+    if (showOption) {
+        createDirectoryOption.style.display = 'block';
+        createDirectoryOption.parentElement.style.display = 'block';
+        
+        if (disableOption) {
+            createDirectoryOption.classList.add('disabled');
+            createDirectoryOption.style.opacity = '0.5';
+            createDirectoryOption.style.pointerEvents = 'none';
+            createDirectoryOption.title = 'Não é possível criar diretórios neste local com o método Dois Níveis';
+        } else {
+            createDirectoryOption.classList.remove('disabled');
+            createDirectoryOption.style.opacity = '1';
+            createDirectoryOption.style.pointerEvents = 'auto';
+            createDirectoryOption.title = '';
+        }
+    } else {
+        createDirectoryOption.style.display = 'none';
+        createDirectoryOption.parentElement.style.display = 'none';
+    }
+}
+
 function buildDirectoryTree(directories) {
     const tree = { path: '/', children: [] };
     const pathMap = { '/': tree };
@@ -1249,12 +1310,14 @@ window.navigateToParent = function() {
     updateBrowser();
     updatePathDisplay();
     updateFileBrowserSidebar();
+    updateCreateOptionsDropdown();
 };
 window.navigateToPath = function(path) {
     globalState.setCurrentPath(path);
     updateBrowser();
     updatePathDisplay();
     updateFileBrowserSidebar();
+    updateCreateOptionsDropdown();
 };
 window.closeCreateDropdown = function() {
     const dropdown = document.getElementById('create-options-dropdown');

@@ -1,5 +1,5 @@
 import globalState from '/js/globalState.js';
-import { updateBrowser, updateSpaceManagementVisualizer, updatePathDisplay, updateFileBrowserSidebar } from '/js/updater.js';
+import { updateBrowser, updateSpaceManagementVisualizer, updatePathDisplay, updateFileBrowserSidebar, updateCreateOptionsDropdown } from '/js/updater.js';
 
 class PartitionSelector {
     constructor() {
@@ -73,6 +73,7 @@ class PartitionSelector {
         updateSpaceManagementVisualizer();
         updatePathDisplay();
         updateFileBrowserSidebar();
+        updateCreateOptionsDropdown();
     }
 
     dispatchSelectionEvent(partitionId) {
