@@ -10,6 +10,7 @@ export default function updateAll() {
     updateSpaceManagementVisualizer();
     updatePathDisplay();
     updateFileBrowserSidebar();
+    updateCreateOptionsDropdown();
     updateModalInfo();
 }
 
@@ -105,7 +106,17 @@ export function updatePartitionsList() {
 
 function createPartitionElement(partition) {
     const div = document.createElement('div');
-    div.className = 'border p-2 rounded-lg space-y-2 cursor-pointer hover:bg-primary/15 transition-colors';
+    
+    // Check if this partition is currently selected to apply appropriate classes
+    const selectedPartition = globalState.getSelectedPartition();
+    const isSelected = selectedPartition && selectedPartition.id === partition.id;
+    
+    if (isSelected) {
+        div.className = 'border p-2 rounded-lg space-y-2 cursor-pointer hover:bg-primary/15 transition-colors ring-2 ring-primary bg-primary/20';
+    } else {
+        div.className = 'border p-2 rounded-lg space-y-2 cursor-pointer hover:bg-primary/15 transition-colors';
+    }
+    
     div.dataset.partitionId = partition.id;
     
     const usagePercentage = partition.getUsagePercentage();
@@ -179,15 +190,22 @@ function createPartitionElement(partition) {
 export function updateBrowser() {
     // Get the current select partatition and all the related files
     const selectedPartition = globalState.getSelectedPartition();
-    if (!selectedPartition) return;
+    
+    // Update file list in the UI
+    const fileListElem = document.getElementById('file-browser-items');
+    if (!fileListElem) return;
+    
+    if (!selectedPartition) {
+        // Clear browser content when no partition is selected
+        fileListElem.innerHTML = '';
+        const emptyState = createNoPartitionSelectedState();
+        fileListElem.appendChild(emptyState);
+        return;
+    }
 
     const currentPath = globalState.getCurrentPath();
     const files = globalState.getFilesInDirectory(selectedPartition.id, currentPath);
     const directories = globalState.getDirectoriesInPath(selectedPartition.id, currentPath);
-
-    // Update file list in the UI
-    const fileListElem = document.getElementById('file-browser-items');
-    if (!fileListElem) return;
     fileListElem.innerHTML = '';
 
     // Create grid container
@@ -271,6 +289,7 @@ function createDirectoryCard(directory) {
         updateBrowser();
         updatePathDisplay();
         updateFileBrowserSidebar();
+        updateCreateOptionsDropdown();
     };
     
     return dirCard;
@@ -353,6 +372,25 @@ function createEmptyState(currentPath) {
         </div>
         <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-2">${message}</h3>
         <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md">${description}</p>
+    `;
+    
+    return emptyDiv;
+}
+
+function createNoPartitionSelectedState() {
+    const emptyDiv = document.createElement('div');
+    emptyDiv.className = 'flex flex-col items-center justify-center py-12 text-center';
+    
+    emptyDiv.innerHTML = `
+        <div class="w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <path d="M21 15l-5-5L5 21"></path>
+            </svg>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-2">Nenhuma partição selecionada</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md">Selecione uma partição para visualizar seus arquivos e diretórios.</p>
     `;
     
     return emptyDiv;
@@ -937,6 +975,65 @@ export function updateFileBrowserSidebar() {
     }
 }
 
+export function updateCreateOptionsDropdown() {
+    const selectedPartition = globalState.getSelectedPartition();
+    const createDirectoryOption = document.querySelector('[onclick*="create_directory.showModal()"]');
+    
+    if (!createDirectoryOption) return;
+    
+    if (!selectedPartition) {
+        // No partition selected, disable directory creation
+        createDirectoryOption.style.display = 'none';
+        return;
+    }
+    
+    const currentPath = globalState.getCurrentPath();
+    let showOption = true;
+    let disableOption = false;
+    
+    switch (selectedPartition.directoryMethod) {
+        case 'Linear':
+            // Linear method does not allow any directories
+            showOption = false;
+            break;
+            
+        case 'Dois Níveis':
+            // Two-level method only allows directories at root level
+            showOption = true;
+            disableOption = (currentPath !== '/');
+            break;
+            
+        case 'Árvore':
+            // Tree method allows directories at any level
+            showOption = true;
+            disableOption = false;
+            break;
+            
+        default:
+            showOption = false;
+    }
+    
+    if (showOption) {
+        createDirectoryOption.style.display = 'block';
+        createDirectoryOption.parentElement.style.display = 'block';
+        
+        if (disableOption) {
+            createDirectoryOption.classList.add('disabled');
+            createDirectoryOption.style.opacity = '0.5';
+            createDirectoryOption.style.pointerEvents = 'none';
+            createDirectoryOption.title = 'Não é possível criar diretórios neste local com o método Dois Níveis';
+        } else {
+            createDirectoryOption.classList.remove('disabled');
+            createDirectoryOption.style.opacity = '1';
+            createDirectoryOption.style.pointerEvents = 'auto';
+            createDirectoryOption.title = '';
+        }
+    } else {
+        createDirectoryOption.style.display = 'none';
+        createDirectoryOption.parentElement.style.display = 'none';
+    }
+}
+
 function buildDirectoryTree(directories) {
     const tree = { path: '/', children: [] };
     const pathMap = { '/': tree };
@@ -1213,10 +1310,18 @@ window.navigateToParent = function() {
     updateBrowser();
     updatePathDisplay();
     updateFileBrowserSidebar();
+    updateCreateOptionsDropdown();
 };
 window.navigateToPath = function(path) {
     globalState.setCurrentPath(path);
     updateBrowser();
     updatePathDisplay();
     updateFileBrowserSidebar();
+    updateCreateOptionsDropdown();
+};
+window.closeCreateDropdown = function() {
+    const dropdown = document.getElementById('create-options-dropdown');
+    if (dropdown) {
+        dropdown.removeAttribute('open');
+    }
 };

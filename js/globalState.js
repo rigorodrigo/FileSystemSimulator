@@ -114,7 +114,7 @@ class GlobalState {
     // Partition selection methods
     setSelectedPartition(partitionId) {
         const partitions = this.disk.partitions || [];
-        const partition = partitions.find(p => p.id == partitionId);
+        const partition = partitions.find(p => p.id === partitionId);
         this.selectedPartition = partition || null;
         // Reset current path when changing partitions
         this.currentPath = '/';

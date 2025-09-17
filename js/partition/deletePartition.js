@@ -38,6 +38,22 @@ window.confirmDeletePartition = function() {
         
         const partition = partitions[partitionIndex];
         
+        // Check if the partition being deleted is currently selected
+        const selectedPartition = globalState.getSelectedPartition();
+        const isSelectedPartition = selectedPartition && selectedPartition.id === partitionToDelete;
+        
+        // Remove all files in this partition
+        const filesInPartition = globalState.getFilesInPartition(partitionToDelete);
+        filesInPartition.forEach(file => {
+            globalState.removeFile(file.id);
+        });
+        
+        // Remove all directories in this partition
+        const directoriesInPartition = globalState.getDirectoriesInPartition(partitionToDelete);
+        directoriesInPartition.forEach(directory => {
+            globalState.removeDirectory(directory.id);
+        });
+        
         for (let i = partition.startBlock; i <= partition.endBlock; i++) {
             updateBlockStatus(i, 'unallocated', {
                 partitionId: null,
@@ -47,6 +63,11 @@ window.confirmDeletePartition = function() {
         
         // Remove partition from array
         partitions.splice(partitionIndex, 1);
+        
+        // If the deleted partition was selected, reset selection
+        if (isSelectedPartition) {
+            globalState.setSelectedPartition(null);
+        }
         
         globalState.setDisk({ partitions: partitions });
         

@@ -88,7 +88,6 @@
                         </button>
                     </div>
                     <div class="stat-value" id="stat-global-files-count">0</div>
-                    <div class="stat-desc" id="stat-global-files-links">TODO links</div>
                 </div>
             </div>
 
@@ -198,11 +197,11 @@
                                 </div>
 
                                 <div>
-                                    <details class="dropdown dropdown-left">
+                                    <details class="dropdown dropdown-left" id="create-options-dropdown">
                                     <summary class="btn btn-soft btn-primary text-center align-middle text-bold text-lg md:text-2xl">+</summary>
                                     <ul class="menu dropdown-content bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                                        <li><a onclick="create_file.showModal()">Criar Arquivo</a></li>
-                                        <li><a onclick="updateDirectoryCreationModal(); create_directory.showModal()">Criar Diretório</a></li>
+                                        <li><a onclick="closeCreateDropdown(); create_file.showModal()">Criar Arquivo</a></li>
+                                        <li><a onclick="closeCreateDropdown(); updateDirectoryCreationModal(); create_directory.showModal()">Criar Diretório</a></li>
                                     </ul>
                                     </details>
                                 </div>
@@ -1902,7 +1901,7 @@ Liberação: adiciona ao final da lista</code></pre>
                         <button type="button" onclick="create_directory.close()" class="btn btn-soft btn-ghost">
                             Cancelar
                         </button>
-                        <button type="submit" class="btn btn-soft btn-success">
+                        <button type="submit" id="create-directory-button" class="btn btn-soft btn-success">
                             Criar Diretório
                         </button>
                     </div>
