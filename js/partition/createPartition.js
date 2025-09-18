@@ -104,10 +104,10 @@ function createPartition(name, startBlock, endBlock, allocationMethod, directory
 
     // Pre fill the space management data based on the selected method
     let spaceManagementData = null;
-    if (spaceManagementMethod === 'bitmap') {
+    if (spaceManagementMethod === 'Bitmap') {
         const totalBlocks = endBlock - startBlock + 1;
         spaceManagementData = new Array(totalBlocks).fill(0); // 0 = free, 1 = used
-    } else if (spaceManagementMethod === 'freeBlockList') {
+    } else if (spaceManagementMethod === 'Lista de Blocos Livres') {
         spaceManagementData = [];
         for (let i = startBlock; i <= endBlock; i++) {
             spaceManagementData.push(i);

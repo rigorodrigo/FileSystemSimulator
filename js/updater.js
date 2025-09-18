@@ -812,9 +812,9 @@ export function updateSpaceManagementVisualizer() {
     `;
     visualizerContainer.appendChild(header);
 
-    if (selectedPartition.spaceManagementMethod === 'bitmap') {
+    if (selectedPartition.spaceManagementMethod === 'Bitmap') {
         renderBitmapVisualization(selectedPartition, visualizerContainer);
-    } else if (selectedPartition.spaceManagementMethod === 'freeBlockList') {
+    } else if (selectedPartition.spaceManagementMethod === 'Lista de Blocos Livres') {
         renderFreeBlockListVisualization(selectedPartition, visualizerContainer);
     }
 }
