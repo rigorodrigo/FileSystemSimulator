@@ -27,11 +27,37 @@ class Partition {
 
 }
 
-function validatePartition(name, startBlock, endBlock) {
-
+function validatePartitionName(name) {
     if (!name || name.trim() === '') {
         throw new Error("Nome da partição é obrigatório!");
     }
+
+    // Check for invalid characters
+    const invalidChars = /[<>:"/\\|?*\x00-\x1f]/;
+    if (invalidChars.test(name.trim())) {
+        throw new Error("Nome da partição contém caracteres inválidos. Evite usar: < > : \" / \\ | ? *");
+    }
+
+    // Check length
+    if (name.trim().length > 255) {
+        throw new Error("Nome da partição é muito longo. Máximo de 255 caracteres.");
+    }
+
+    // Check for duplicate partition names
+    const existingPartitions = globalState.getDisk().partitions || [];
+    const duplicateName = existingPartitions.find(partition => 
+        partition.name.toLowerCase() === name.trim().toLowerCase()
+    );
+    if (duplicateName) {
+        throw new Error(`Já existe uma partição com o nome "${name}". Por favor, escolha um nome diferente.`);
+    }
+
+    return true;
+}
+
+function validatePartition(name, startBlock, endBlock) {
+    validatePartitionName(name);
+
     if (isNaN(startBlock) || isNaN(endBlock)) {
         throw new Error("Blocos inicial e final devem ser válidos!");
     }
@@ -45,6 +71,7 @@ function validatePartition(name, startBlock, endBlock) {
         throw new Error(`Blocos devem estar contidos entre 0 e ${totalBlocks - 1}`)
     }
 
+    // Check for block range conflicts with existing partitions
     const existingPartitions = globalState.getDisk().partitions || [];
     for (const partition of existingPartitions) {
         if ((startBlock >= partition.startBlock && startBlock <= partition.endBlock) ||
@@ -71,7 +98,7 @@ function updateDiskBlocks(partition) {
 
 function createPartition(name, startBlock, endBlock, allocationMethod, directoryMethod, spaceManagementMethod) {
     const disk = globalState.getDisk();
-    const existingPartition = disk.partitions || [];
+    const existingPartitions = disk.partitions || [];
 
     validatePartition(name, startBlock, endBlock);
 
@@ -86,6 +113,7 @@ function createPartition(name, startBlock, endBlock, allocationMethod, directory
             spaceManagementData.push(i);
         }
     }
+    
     const partition = new Partition(
         name,
         startBlock,
@@ -93,10 +121,13 @@ function createPartition(name, startBlock, endBlock, allocationMethod, directory
         allocationMethod,
         directoryMethod,
         spaceManagementMethod
-    )
+    );
 
-    existingPartition.push(partition);
-    globalState.setDisk({ ...disk,partitions: existingPartition });
+    // Assign the space management data to the partition
+    partition.spaceManagementData = spaceManagementData;
+
+    existingPartitions.push(partition);
+    globalState.setDisk({ ...disk, partitions: existingPartitions });
 
     updateDiskBlocks(partition);
     updateAll();

@@ -32,10 +32,27 @@ class File {
     }
 }
 
-function validateFileCreation(name, sizeInKB, partition) {
+function validateFileName(name) {
     if (!name || name.trim() === '') {
         throw new Error("Nome do arquivo é obrigatório!");
     }
+
+    // Check for invalid characters in file names
+    const invalidChars = /[<>:"/\\|?*\x00-\x1f]/;
+    if (invalidChars.test(name.trim())) {
+        throw new Error("Nome do arquivo contém caracteres inválidos. Evite usar: < > : \" / \\ | ? *");
+    }
+
+    // Check length
+    if (name.trim().length > 255) {
+        throw new Error("Nome do arquivo é muito longo. Máximo de 255 caracteres.");
+    }
+
+    return true;
+}
+
+function validateFileCreation(name, sizeInKB, partition) {
+    validateFileName(name);
     
     if (!sizeInKB || isNaN(sizeInKB) || sizeInKB <= 0) {
         throw new Error("Tamanho do arquivo deve ser um número positivo!");
@@ -43,6 +60,25 @@ function validateFileCreation(name, sizeInKB, partition) {
     
     if (!partition) {
         throw new Error("Nenhuma partição selecionada!");
+    }
+
+    // Check for duplicate file names in the same directory
+    const currentPath = globalState.getCurrentPath();
+    const existingFiles = globalState.getFilesInDirectory(partition.id, currentPath);
+    const duplicateFile = existingFiles.find(file => 
+        file.name.toLowerCase() === name.trim().toLowerCase()
+    );
+    if (duplicateFile) {
+        throw new Error(`Já existe um arquivo com o nome "${name}" neste diretório. Por favor, escolha um nome diferente.`);
+    }
+
+    // Check for duplicate names with directories in the same location
+    const existingDirectories = globalState.getDirectoriesInPath(partition.id, currentPath);
+    const duplicateDirectory = existingDirectories.find(dir => 
+        dir.name.toLowerCase() === name.trim().toLowerCase()
+    );
+    if (duplicateDirectory) {
+        throw new Error(`Já existe um diretório com o nome "${name}" neste local. Por favor, escolha um nome diferente.`);
     }
 
     const blockSize = globalState.getDiskConfig().blockSize;

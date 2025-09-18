@@ -19,19 +19,49 @@ export class Directory {
     }
 }
 
-function validateDirectoryCreation(name, partition) {
+function validateDirectoryName(name) {
     if (!name || name.trim() === '') {
         throw new Error('Nome do diretório não pode ser vazio!');
     }
+
+    // Check for invalid characters in directory names
+    const invalidChars = /[<>:"/\\|?*\x00-\x1f]/;
+    if (invalidChars.test(name.trim())) {
+        throw new Error("Nome do diretório contém caracteres inválidos. Evite usar: < > : \" / \\ | ? *");
+    }
+
+    // Check length
+    if (name.trim().length > 255) {
+        throw new Error("Nome do diretório é muito longo. Máximo de 255 caracteres.");
+    }
+
+    return true;
+}
+
+function validateDirectoryCreation(name, partition) {
+    validateDirectoryName(name);
+    
     if (!partition) {
         throw new Error("Nenhuma partição selecionada!");
     }
 
-    // Check if directory name already exists in current path
+    // Check for duplicate directory names in the same location (case-insensitive)
     const currentPath = globalState.getCurrentPath();
     const existingDirs = globalState.getDirectoriesInPath(partition.id, currentPath);
-    if (existingDirs.some(dir => dir.name === name)) {
-        throw new Error(`Diretório "${name}" já existe neste local!`);
+    const duplicateDir = existingDirs.find(dir => 
+        dir.name.toLowerCase() === name.trim().toLowerCase()
+    );
+    if (duplicateDir) {
+        throw new Error(`Já existe um diretório com o nome "${name}" neste local. Por favor, escolha um nome diferente.`);
+    }
+
+    // Check for duplicate names with files in the same directory
+    const existingFiles = globalState.getFilesInDirectory(partition.id, currentPath);
+    const duplicateFile = existingFiles.find(file => 
+        file.name.toLowerCase() === name.trim().toLowerCase()
+    );
+    if (duplicateFile) {
+        throw new Error(`Já existe um arquivo com o nome "${name}" neste diretório. Por favor, escolha um nome diferente.`);
     }
 
     // Check if there's at least 1 block available
