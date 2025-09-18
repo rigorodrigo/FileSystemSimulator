@@ -1835,34 +1835,49 @@ Liberação: adiciona ao final da lista</code></pre>
                         </label>
                     </div>
                     
-                    <label class="select w-full grid grid-cols-2 mt-2">
-                        Algorítmo de alocação:
-                        <select id="partition-allocation-method" required>
-                            <option value="">Selecione...</option>
-                            <option value="Contígua">Contígua</option>
-                            <option value="Encadeada">Encadeada</option>
-                            <option value="Indexada">Indexada</option>
-                        </select>
-                    </label>
+                    <div class="flex justify-between items-center gap-4">
+                        <label class="select w-full grid grid-cols-2 mt-2">
+                            Algorítmo de alocação:
+                            <select id="partition-allocation-method" required>
+                                <option value="">Selecione...</option>
+                                <option value="Contígua">Contígua</option>
+                                <option value="Encadeada">Encadeada</option>
+                                <option value="Indexada">Indexada</option>
+                            </select>
+                        </label>
+                        <button type="button" class="stat-title cursor-pointer w-6 h-6 flex justify-end flex-1" onclick="info_method_allocation.showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        </button>
+                    </div>
                     
-                    <label class="select w-full grid grid-cols-2 mt-2">
-                        Método de diretórios:
-                        <select id="partition-directory-method" required>
-                            <option value="">Selecione...</option>
-                            <option value="Linear">Linear</option>
-                            <option value="Dois Níveis">Dois Níveis</option>
-                            <option value="Árvore">Árvore</option>
-                        </select>
-                    </label>
-                    
-                    <label class="select w-full grid grid-cols-2 mt-2">
-                        Gerenciamento de espaço livre:
-                        <select id="partition-space-management" required>
-                            <option value="">Selecione...</option>
-                            <option value="bitmap">Mapa de bits</option>
-                            <option value="freeBlockList">Lista de blocos livres</option>
-                        </select>
-                    </label>
+                    <div class="flex justify-between items-center gap-4">
+                        <label class="select w-full grid grid-cols-2 mt-2">
+                            Método de diretórios:
+                            <select id="partition-directory-method" required>
+                                <option value="">Selecione...</option>
+                                <option value="Linear">Linear</option>
+                                <option value="Dois Níveis">Dois Níveis</option>
+                                <option value="Árvore">Árvore</option>
+                            </select>
+                        </label>
+                        <button type="button" class="stat-title cursor-pointer w-6 h-6 flex justify-end flex-1" onclick="info_method_directories.showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        </button>
+                    </div>
+
+                    <div class="flex justify-between items-center gap-4">
+                        <label class="select w-full grid grid-cols-2 mt-2">
+                            Gerenciamento de espaço livre:
+                            <select id="partition-space-management" required>
+                                <option value="">Selecione...</option>
+                                <option value="bitmap">Mapa de bits</option>
+                                <option value="freeBlockList">Lista de blocos livres</option>
+                            </select>
+                        </label>
+                        <button type="button" class="stat-title cursor-pointer w-6 h-6 flex justify-end flex-1" onclick="info_free_space_management.showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-info"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        </button>
+                    </div>
 
                     <div class="flex justify-end mt-4">
                         <button type="submit" class="btn btn-soft btn-primary">
