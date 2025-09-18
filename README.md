@@ -17,7 +17,7 @@ O sistema de arquivos é uma implementação em recurso de  software feita pelo 
     - Alocação Contígua;  
     - Alocação Encadeada;  
     - Alocação Indexada.  
-- **Manipulação de arquivos e diretórios:**  Crie arquivos e diretórios dentro das partições e veja como o espaço em disco é gerenciado de acordo com o método de alocação selecionado.  
+- **Manipulação de arquivos e diretórios:**  Crie arquivos e diretórios dentro das partições e veja como o espaço em disco é gerenciado de acordo com o método de alocação selecionado.Também é possível redimensionar (estender) o tamanho dos arquivos.  
 - **Gerenciamento de Espaço Livre:** Entenda como o sistema operacional rastreia o espaço livre em disco utilizando técnicas como Mapa de Bits (Bitmap) ou Lista de Blocos Livres.  
 
 ## Como executar
